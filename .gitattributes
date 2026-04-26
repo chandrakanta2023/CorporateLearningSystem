@@ -1,0 +1,37 @@
+# Corporate Learning System - Git Attributes
+
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Source Code
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# PowerShell Scripts
+*.ps1 text eol=crlf
+
+# Configuration Files
+*.config.* text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+
+# Documentation
+*.csv text eol=lf
+*.txt text eol=lf
+
+# Binary Files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary
