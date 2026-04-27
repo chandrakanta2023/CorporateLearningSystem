@@ -1,0 +1,74 @@
+.interventions-list {
+  background-color: #fafafa;
+  border-radius: 8px;
+}
+
+.interventions-list .ant-list-item {
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
+}
+
+.interventions-list .ant-list-item:hover {
+  background-color: #f5f5f5;
+}
+
+.interventions-list .ant-list-item:last-child {
+  border-bottom: none;
+}
+
+.intervention-item {
+  align-items: flex-start !important;
+}
+
+.intervention-title {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.intervention-description {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.intervention-type {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+  margin: 0;
+}
+
+.intervention-date {
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+}
+
+.intervention-actions {
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+
+@media (max-width: 768px) {
+  .interventions-list .ant-list-item {
+    padding: 12px;
+  }
+
+  .intervention-title {
+    font-size: 13px;
+  }
+
+  .intervention-type {
+    font-size: 12px;
+  }
+
+  .intervention-actions {
+    margin-left: 8px;
+  }
+}

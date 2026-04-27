@@ -1,0 +1,94 @@
+.reports-container {
+  padding: 24px;
+}
+
+.page-title-card {
+  margin-bottom: 32px;
+  background: linear-gradient(135deg, #0f4c81 0%, #1a5ba8 100%);
+  color: white;
+  border: none;
+}
+
+.page-title-card h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.page-title-card p {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.action-card {
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s;
+}
+
+.action-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.action-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.action-label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.reports-card {
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.report-item {
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
+}
+
+.report-item:hover {
+  background-color: #fafafa;
+}
+
+.report-item:last-child {
+  border-bottom: none;
+}
+
+.report-icon {
+  font-size: 24px;
+}
+
+.report-item .ant-list-item-meta-title {
+  margin-bottom: 4px;
+}
+
+.report-item .ant-list-item-meta-description {
+  font-size: 12px;
+  color: #666;
+}
+
+.report-meta {
+  font-size: 11px;
+  color: #999;
+}
+
+@media (max-width: 768px) {
+  .reports-container {
+    padding: 12px;
+  }
+
+  .page-title-card h1 {
+    font-size: 24px;
+  }
+}

@@ -1,0 +1,71 @@
+.summary-card {
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  height: 100%;
+  min-height: 140px;
+  display: flex;
+  align-items: stretch;
+}
+
+.summary-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.summary-card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  padding: 4px; /* Card already has padding from Ant Design */
+}
+
+.summary-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.summary-card-title {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.summary-card-prefix {
+  font-size: 24px;
+  opacity: 0.8;
+}
+
+.summary-card-value {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  word-break: break-word;
+}
+
+.summary-card-trend {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+@media (max-width: 576px) {
+  .summary-card {
+    min-height: 120px;
+  }
+
+  .summary-card-value {
+    font-size: 24px;
+  }
+
+  .summary-card-prefix {
+    font-size: 20px;
+  }
+}

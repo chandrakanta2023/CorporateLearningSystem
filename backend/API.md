@@ -1,8 +1,9 @@
 # Corporate Learning System - Backend API
 
-## Base URL
+## Base URLs
 ```
-http://localhost:3000/api/v1
+Health: http://localhost:3000/health
+API:    http://localhost:3000/api/v1
 ```
 
 ## Health Check Endpoints
@@ -17,7 +18,12 @@ http://localhost:3000/api/v1
   "timestamp": 1745740800000,
   "uptime": 123.456,
   "environment": "development",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "database": {
+    "status": "connected",
+    "type": "PostgreSQL",
+    "message": "PostgreSQL 16.1"
+  }
 }
 ```
 
@@ -77,6 +83,9 @@ All error responses follow this format:
 
 Allowed origins:
 - `http://localhost:5173` (Frontend development server)
+
+Configuration source:
+- `CORS_ORIGIN` in `.env`
 
 ---
 

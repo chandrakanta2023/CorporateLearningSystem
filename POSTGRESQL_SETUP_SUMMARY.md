@@ -3,10 +3,10 @@
 ## ✅ What's Been Configured
 
 ### 1. PostgreSQL Verified
-- **Version:** PostgreSQL 16.1 (Exceeds requirement of 15+)
-- **Location:** `C:\Program Files\PostgreSQL\16`
+- **Version:** PostgreSQL 18 (Exceeds requirement of 15+)
+- **Location:** `C:\Program Files\PostgreSQL\18`
 - **Service Status:** Running on port 5432
-- **Service Name:** postgresql-x64-16
+- **Service Name:** postgresql-x64-18
 
 ### 2. Backend Database Integration Complete
 ✅ **TypeORM Installed:** `@nestjs/typeorm`, `typeorm`, `pg`  
@@ -108,7 +108,7 @@ npm run start:dev
 
 **Check health endpoint:**
 ```powershell
-Invoke-RestMethod -Uri http://localhost:3000/api/v1/health
+Invoke-RestMethod -Uri http://localhost:3000/health
 ```
 
 **Expected response:**
@@ -118,7 +118,7 @@ Invoke-RestMethod -Uri http://localhost:3000/api/v1/health
   "database": {
     "status": "connected",
     "type": "PostgreSQL",
-    "message": "PostgreSQL 16.1"
+    "message": "PostgreSQL 18"
   },
   ...
 }
@@ -165,8 +165,9 @@ If you forgot it, you may need to reset it through pgAdmin or PostgreSQL configu
 **Solution:** Check PostgreSQL service is running:
 ```powershell
 Get-Service postgresql-x64-16
+Get-Service postgresql-x64-18
 # If stopped:
-Start-Service postgresql-x64-16
+Start-Service postgresql-x64-18
 ```
 
 ### Tables not created
@@ -179,6 +180,7 @@ Start-Service postgresql-x64-16
 ```powershell
 $env:PGPASSWORD='your_password'
 & "C:\Program Files\PostgreSQL\16\bin\psql.exe" -U postgres -d corporate_learning_db
+& "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -d corporate_learning_db
 
 # List tables:
 \dt

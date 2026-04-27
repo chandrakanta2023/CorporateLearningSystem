@@ -1,0 +1,41 @@
+.at-risk-table {
+  font-size: 13px;
+}
+
+.at-risk-table .ant-table-thead > tr > th {
+  background-color: #fafafa;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.at-risk-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 12px 8px;
+}
+
+.at-risk-table .ant-table-tbody > tr:hover > td {
+  background-color: #fafafa;
+}
+
+.at-risk-table .ant-pagination {
+  margin-top: 16px;
+  text-align: right;
+}
+
+.at-risk-table .ant-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .at-risk-table {
+    font-size: 12px;
+  }
+
+  .at-risk-table .ant-table-thead > tr > th,
+  .at-risk-table .ant-table-tbody > tr > td {
+    padding: 8px 4px;
+  }
+}

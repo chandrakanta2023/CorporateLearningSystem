@@ -1,0 +1,65 @@
+.dashboard-container {
+  padding: 24px;
+}
+
+.dashboard-title {
+  margin-bottom: 32px;
+  background: linear-gradient(135deg, #0f4c81 0%, #1a5ba8 100%);
+  color: white;
+  border: none;
+}
+
+.dashboard-title h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.dashboard-title p {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.chart-card {
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.table-card {
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.activity-card {
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.chart-card .ant-card-head,
+.table-card .ant-card-head,
+.activity-card .ant-card-head {
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 12px;
+  }
+
+  .dashboard-title {
+    margin-bottom: 24px;
+  }
+
+  .dashboard-title h1 {
+    font-size: 24px;
+  }
+
+  .dashboard-title p {
+    font-size: 12px;
+  }
+}

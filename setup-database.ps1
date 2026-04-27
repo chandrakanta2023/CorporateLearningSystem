@@ -6,11 +6,32 @@ Write-Host "PostgreSQL Database Setup" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
-$PSQL_PATH = "C:\Program Files\PostgreSQL\16\bin\psql.exe"
+$postgresService = Get-Service | Where-Object {
+    $_.Name -match '^postgresql-x64-' -or $_.DisplayName -match '^postgresql-x64-'
+} | Sort-Object Name -Descending | Select-Object -First 1
+
+if (-not $postgresService) {
+    Write-Host "No PostgreSQL Windows service was found. Install PostgreSQL first." -ForegroundColor Red
+    exit 1
+}
+
+$versionSuffix = ($postgresService.Name -replace '^postgresql-x64-', '')
+$psqlCandidates = @(
+    "C:\Program Files\PostgreSQL\$versionSuffix\bin\psql.exe",
+    "C:\Program Files\PostgreSQL\$versionSuffix\pgAdmin 4\runtime\psql.exe"
+)
+
+$PSQL_PATH = $psqlCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
+
+if (-not $PSQL_PATH) {
+    Write-Host "PostgreSQL client executable was not found for version $versionSuffix." -ForegroundColor Red
+    exit 1
+}
 
 # Prompt for PostgreSQL password
-Write-Host "PostgreSQL 16.1 detected" -ForegroundColor Green
-Write-Host "Service Status: Running" -ForegroundColor Green
+Write-Host "PostgreSQL $versionSuffix detected" -ForegroundColor Green
+Write-Host "Service Status: $($postgresService.Status)" -ForegroundColor Green
+Write-Host "psql Path: $PSQL_PATH" -ForegroundColor Green
 Write-Host ""
 
 $password = Read-Host "Enter PostgreSQL 'postgres' user password" -AsSecureString

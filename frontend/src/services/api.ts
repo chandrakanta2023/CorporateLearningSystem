@@ -1,8 +1,11 @@
 import axios from 'axios';
 
+const backendBaseUrl =
+  import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') || 'http://localhost:3000';
+
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api/v1',
+  baseURL: `${backendBaseUrl}/api/v1`,
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
@@ -26,7 +29,9 @@ export interface HealthResponse {
 // API methods
 export const healthApi = {
   check: async (): Promise<HealthResponse> => {
-    const response = await api.get<HealthResponse>('/health');
+    const response = await axios.get<HealthResponse>(`${backendBaseUrl}/health`, {
+      timeout: 5000,
+    });
     return response.data;
   },
 };

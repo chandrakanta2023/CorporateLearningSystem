@@ -81,7 +81,7 @@ The system will create the following tables:
 Check the health endpoint to verify database connection:
 
 ```powershell
-Invoke-RestMethod -Uri http://localhost:3000/api/v1/health
+Invoke-RestMethod -Uri http://localhost:3000/health
 ```
 
 Expected response:
@@ -91,7 +91,7 @@ Expected response:
   "database": {
     "status": "connected",
     "type": "PostgreSQL",
-    "message": "PostgreSQL 16.1"
+    "message": "PostgreSQL <detected-version>"
   }
 }
 ```
@@ -99,7 +99,7 @@ Expected response:
 ## Troubleshooting
 
 ### Connection Failed
-- Verify PostgreSQL service is running: `Get-Service postgresql-x64-16`
+- Verify PostgreSQL service is running: `Get-Service | Where-Object { $_.Name -match 'postgresql-x64-' }`
 - Check credentials in `.env` file
 - Ensure database exists: Run `setup-database.ps1`
 
@@ -118,7 +118,7 @@ Connect to PostgreSQL manually:
 
 ```powershell
 $env:PGPASSWORD='your_password'
-& "C:\Program Files\PostgreSQL\16\bin\psql.exe" -U postgres -d corporate_learning_db
+& "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -d corporate_learning_db
 ```
 
 List tables:
