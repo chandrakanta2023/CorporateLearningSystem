@@ -8,7 +8,14 @@ import { ComplianceController } from './compliance.controller';
 import { ComplianceService } from './compliance.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Enrollment, Intervention, ComplianceReport])],
+  imports: [
+    TypeOrmModule.forFeature([
+      User,
+      Enrollment,
+      Intervention,
+      ComplianceReport,
+    ]),
+  ],
   controllers: [ComplianceController],
   providers: [ComplianceService],
 })

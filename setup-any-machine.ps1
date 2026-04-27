@@ -10,16 +10,6 @@ if (!(Get-Command npm -ErrorAction SilentlyContinue)) {
   exit 1
 }
 
-$psqlCmd = Get-Command psql -ErrorAction SilentlyContinue
-if ($psqlCmd) {
-  $psqlPath = $psqlCmd.Source
-} elseif (Test-Path "C:\Program Files\PostgreSQL\16\bin\psql.exe") {
-  $psqlPath = "C:\Program Files\PostgreSQL\16\bin\psql.exe"
-} else {
-  Write-Error "PostgreSQL client (psql) is not installed or not in PATH."
-  exit 1
-}
-
 Set-Location backend
 if (!(Test-Path .env)) {
   Copy-Item .env.example .env
@@ -27,27 +17,8 @@ if (!(Test-Path .env)) {
 }
 
 npm install
-npm run db:init
+npm run seed
 
-$cfg = @{}
-Get-Content .env | ForEach-Object {
-  $line = $_.Trim()
-  if ($line -eq "" -or $line.StartsWith("#")) { return }
-  $parts = $line.Split("=", 2)
-  if ($parts.Length -eq 2) {
-    $cfg[$parts[0]] = $parts[1]
-  }
-}
-
-$dbHost = $cfg["DB_HOST"]
-$dbPort = $cfg["DB_PORT"]
-$dbUser = $cfg["DB_USERNAME"]
-$dbPass = $cfg["DB_PASSWORD"]
-$dbName = $cfg["DB_NAME"]
-
-$env:PGPASSWORD = $dbPass
-& $psqlPath -h $dbHost -p $dbPort -U $dbUser -d $dbName -f ".\\sql\\001_schema.sql"
-& $psqlPath -h $dbHost -p $dbPort -U $dbUser -d $dbName -f ".\\sql\\002_seed_data.sql"
 Set-Location ..
 
 Set-Location frontend

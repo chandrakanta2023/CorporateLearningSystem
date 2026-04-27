@@ -2,11 +2,17 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
-import { Enrollment } from '../entities/enrollment.entity';
-import { Intervention } from '../entities/intervention.entity';
+import { Enrollment, EnrollmentStatus } from '../entities/enrollment.entity';
+import {
+  Intervention,
+  InterventionStatus,
+} from '../entities/intervention.entity';
 import { AttendanceRecord } from '../entities/attendance-record.entity';
 import { AssessmentRecord } from '../entities/assessment-record.entity';
-import { CompetencyMilestone, CompetencyStatus } from '../entities/competency-milestone.entity';
+import {
+  CompetencyMilestone,
+  CompetencyStatus,
+} from '../entities/competency-milestone.entity';
 
 @Injectable()
 export class ProfilesService {
@@ -31,25 +37,36 @@ export class ProfilesService {
       throw new NotFoundException('Employee not found');
     }
 
-    const [enrollments, interventions, attendance, assessments, competencies] = await Promise.all([
-      this.enrollmentRepository.find({ where: { userId } }),
-      this.interventionRepository.find({ where: { userId }, order: { createdAt: 'DESC' } }),
-      this.attendanceRepository.find({ where: { userId } }),
-      this.assessmentRepository.find({ where: { userId } }),
-      this.competencyRepository.find({ where: { userId } }),
-    ]);
+    const [enrollments, interventions, attendance, assessments, competencies] =
+      await Promise.all([
+        this.enrollmentRepository.find({ where: { userId } }),
+        this.interventionRepository.find({
+          where: { userId },
+          order: { createdAt: 'DESC' },
+        }),
+        this.attendanceRepository.find({ where: { userId } }),
+        this.assessmentRepository.find({ where: { userId } }),
+        this.competencyRepository.find({ where: { userId } }),
+      ]);
 
     const completionRate =
       enrollments.length > 0
-        ? Math.round((enrollments.filter((e) => e.status === 'completed').length / enrollments.length) * 100)
+        ? Math.round(
+            (enrollments.filter((e) => e.status === EnrollmentStatus.COMPLETED)
+              .length /
+              enrollments.length) *
+              100,
+          )
         : 0;
 
     const avgAssessmentScore =
       assessments.length > 0
         ? Number(
             (
-              assessments.reduce((sum, a) => sum + (Number(a.score) / Number(a.maxScore)) * 100, 0) /
-              assessments.length
+              assessments.reduce(
+                (sum, a) => sum + (Number(a.score) / Number(a.maxScore)) * 100,
+                0,
+              ) / assessments.length
             ).toFixed(2),
           )
         : 0;
@@ -58,8 +75,10 @@ export class ProfilesService {
       attendance.length > 0
         ? Number(
             (
-              attendance.reduce((sum, a) => sum + Number(a.attendancePercentage), 0) /
-              attendance.length
+              attendance.reduce(
+                (sum, a) => sum + Number(a.attendancePercentage),
+                0,
+              ) / attendance.length
             ).toFixed(2),
           )
         : 0;
@@ -67,12 +86,18 @@ export class ProfilesService {
     const competencyAchievementRate =
       competencies.length > 0
         ? Math.round(
-            (competencies.filter((c) => c.status === CompetencyStatus.ACHIEVED).length / competencies.length) *
+            (competencies.filter((c) => c.status === CompetencyStatus.ACHIEVED)
+              .length /
+              competencies.length) *
               100,
           )
         : 0;
 
-    const riskLevel = this.getRiskLevel(attendancePercentage, avgAssessmentScore, competencyAchievementRate);
+    const riskLevel = this.getRiskLevel(
+      attendancePercentage,
+      avgAssessmentScore,
+      competencyAchievementRate,
+    );
 
     return {
       employee: {
@@ -110,9 +135,18 @@ export class ProfilesService {
     ]);
 
     const totalEmployees = users.length;
-    const activeInterventions = interventions.filter((i) => i.status === 'pending' || i.status === 'active').length;
-    const completedEnrollments = enrollments.filter((e) => e.status === 'completed').length;
-    const complianceRate = enrollments.length > 0 ? Math.round((completedEnrollments / enrollments.length) * 100) : 0;
+    const activeInterventions = interventions.filter(
+      (i) =>
+        i.status === InterventionStatus.PENDING ||
+        i.status === InterventionStatus.ACTIVE,
+    ).length;
+    const completedEnrollments = enrollments.filter(
+      (e) => e.status === EnrollmentStatus.COMPLETED,
+    ).length;
+    const complianceRate =
+      enrollments.length > 0
+        ? Math.round((completedEnrollments / enrollments.length) * 100)
+        : 0;
 
     const attendanceByUser = new Map<string, number[]>();
     for (const record of attendance) {
@@ -126,7 +160,8 @@ export class ProfilesService {
         const userAttendance = attendanceByUser.get(user.id) ?? [];
         const avg =
           userAttendance.length > 0
-            ? userAttendance.reduce((sum, value) => sum + value, 0) / userAttendance.length
+            ? userAttendance.reduce((sum, value) => sum + value, 0) /
+              userAttendance.length
             : 100;
         const risk = avg < 60 ? 'high' : avg < 75 ? 'medium' : 'low';
         return {
@@ -135,7 +170,8 @@ export class ProfilesService {
           email: user.email,
           risk,
           interventionType: 'Remedial Coaching',
-          enrolledCourses: enrollments.filter((e) => e.userId === user.id).length,
+          enrolledCourses: enrollments.filter((e) => e.userId === user.id)
+            .length,
         };
       })
       .filter((u) => u.risk !== 'low')
@@ -143,25 +179,27 @@ export class ProfilesService {
 
     const monthlyProgress = this.buildProgressSeries(enrollments);
 
-    const recentInterventions = interventions.slice(0, 5).map((intervention) => {
-      const user = users.find((u) => u.id === intervention.userId);
-      return {
-        id: intervention.id,
-        employeeId: intervention.userId,
-        employeeName: user ? `${user.firstName} ${user.lastName}` : 'Unknown',
-        type: intervention.type,
-        startDate: intervention.createdAt.toISOString(),
-        status: intervention.status,
-        progress:
-          intervention.status === 'active'
-            ? Math.max(20, intervention.progress || 60)
-            : intervention.status === 'pending'
-              ? Math.max(0, intervention.progress || 20)
-              : intervention.status === 'completed'
-                ? 100
-                : Math.max(0, intervention.progress || 0),
-      };
-    });
+    const recentInterventions = interventions
+      .slice(0, 5)
+      .map((intervention) => {
+        const user = users.find((u) => u.id === intervention.userId);
+        return {
+          id: intervention.id,
+          employeeId: intervention.userId,
+          employeeName: user ? `${user.firstName} ${user.lastName}` : 'Unknown',
+          type: intervention.type,
+          startDate: intervention.createdAt.toISOString(),
+          status: intervention.status,
+          progress:
+            intervention.status === InterventionStatus.ACTIVE
+              ? Math.max(20, intervention.progress || 60)
+              : intervention.status === InterventionStatus.PENDING
+                ? Math.max(0, intervention.progress || 20)
+                : intervention.status === InterventionStatus.COMPLETED
+                  ? 100
+                  : Math.max(0, intervention.progress || 0),
+        };
+      });
 
     return {
       metrics: {
@@ -177,7 +215,11 @@ export class ProfilesService {
     };
   }
 
-  private getRiskLevel(attendance: number, assessment: number, competency: number) {
+  private getRiskLevel(
+    attendance: number,
+    assessment: number,
+    competency: number,
+  ) {
     if (attendance < 60 || assessment < 50 || competency < 40) {
       return 'high';
     }
@@ -189,7 +231,15 @@ export class ProfilesService {
 
   private buildProgressSeries(enrollments: Enrollment[]) {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-    const base = enrollments.length > 0 ? Math.round((enrollments.filter((e) => e.status === 'completed').length / enrollments.length) * 100) : 55;
+    const base =
+      enrollments.length > 0
+        ? Math.round(
+            (enrollments.filter((e) => e.status === EnrollmentStatus.COMPLETED)
+              .length /
+              enrollments.length) *
+              100,
+          )
+        : 55;
 
     return months.map((month, idx) => ({
       month,

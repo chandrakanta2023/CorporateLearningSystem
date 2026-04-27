@@ -7,7 +7,13 @@ import { IngestionController } from './ingestion.controller';
 import { IngestionService } from './ingestion.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AttendanceRecord, AssessmentRecord, CompetencyMilestone])],
+  imports: [
+    TypeOrmModule.forFeature([
+      AttendanceRecord,
+      AssessmentRecord,
+      CompetencyMilestone,
+    ]),
+  ],
   controllers: [IngestionController],
   providers: [IngestionService],
   exports: [IngestionService],

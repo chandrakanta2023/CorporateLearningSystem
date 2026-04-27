@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Alert, Button, Card, Form, Input, Typography } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { authApi } from '../services/api';
+import { setSession } from '../services/auth';
 
 interface SignupForm {
   email: string;
@@ -21,8 +22,8 @@ export default function Signup() {
       setLoading(true);
       setError(null);
       const response = await authApi.register(values);
-      localStorage.setItem('auth_token', response.access_token);
-      localStorage.setItem('auth_user', JSON.stringify(response.user));
+      const token = response.accessToken || response.access_token;
+      setSession(token, response.user);
       navigate('/');
     } catch {
       setError('Sign up failed. Email may already exist.');

@@ -20,9 +20,10 @@ export class HealthController {
         dbStatus = 'connected';
         dbMessage = `PostgreSQL ${await this.getDatabaseVersion()}`;
       }
-    } catch (error) {
+    } catch (error: unknown) {
       dbStatus = 'error';
-      dbMessage = error.message;
+      dbMessage =
+        error instanceof Error ? error.message : 'Unknown health check error';
     }
 
     return {
@@ -41,8 +42,21 @@ export class HealthController {
 
   private async getDatabaseVersion(): Promise<string> {
     try {
-      const result = await this.dataSource.query('SELECT version()');
-      const version = result[0]?.version || 'Unknown';
+      const result: unknown = await this.dataSource.query('SELECT version()');
+      if (!Array.isArray(result) || result.length === 0) {
+        return 'Unknown';
+      }
+
+      const firstRow: unknown = (result as unknown[])[0];
+      if (typeof firstRow !== 'object' || firstRow === null) {
+        return 'Unknown';
+      }
+
+      const version = (firstRow as { version?: unknown }).version;
+      if (typeof version !== 'string') {
+        return 'Unknown';
+      }
+
       // Extract just the version number (e.g., "16.1")
       const match = version.match(/PostgreSQL (\d+\.\d+)/);
       return match ? match[1] : 'Unknown';

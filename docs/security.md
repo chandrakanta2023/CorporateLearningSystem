@@ -1,16 +1,20 @@
-# Security Notes (Phase 1)
+# Security Notes
 
 ## Current Controls
 
-- Backend CORS configured to allow local frontend origin (`http://localhost:5173`)
+- Backend CORS configured for local frontend dev/preview origins with env override support
 - Frontend Content Security Policy meta policy in `frontend/index.html`
+- Global `ValidationPipe` enabled with `whitelist`, `forbidNonWhitelisted`, and `transform`
+- JWT authentication with bearer tokens
+- Role-based authorization guards for privileged endpoints
+- Swagger configured with bearer auth support
 - Environment variables externalized via `.env` / `.env.example`
 - `.env` ignored in root `.gitignore`
 
 ## Authentication
 
-- JWT-based authentication is planned but not fully implemented in Phase 1 foundation.
-- Public routes currently include health checks.
+- Implemented in `auth` module (`/api/v1/auth/login`, `/api/v1/auth/register`, `/api/v1/auth/profile`).
+- Public routes are intentionally limited (for example: `GET /health`, login/register).
 
 ## Secret Management
 
@@ -27,7 +31,6 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ## Future Hardening Items
 
 - Helmet headers
-- Global validation pipes and DTO validation
 - Rate limiting for authentication routes
-- Role-based endpoint guards
 - HTTPS configuration for deployed environments
+- Secret rotation process and audit policy retention controls

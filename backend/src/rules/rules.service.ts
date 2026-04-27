@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RiskRule } from '../entities/risk-rule.entity';
@@ -18,10 +22,14 @@ export class RulesService {
 
   async create(payload: CreateRuleDto) {
     if (!payload.name || !payload.description || !payload.definition) {
-      throw new BadRequestException('name, description, and definition are required');
+      throw new BadRequestException(
+        'name, description, and definition are required',
+      );
     }
 
-    const existing = await this.ruleRepository.findOne({ where: { name: payload.name } });
+    const existing = await this.ruleRepository.findOne({
+      where: { name: payload.name },
+    });
     if (existing) {
       throw new BadRequestException('Rule with this name already exists');
     }

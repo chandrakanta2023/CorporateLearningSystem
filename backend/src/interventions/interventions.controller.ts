@@ -1,9 +1,18 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { InterventionsService } from './interventions.service';
-import type { CreateInterventionDto } from './dto/create-intervention.dto';
-import type { UpdateInterventionDto } from './dto/update-intervention.dto';
+import { CreateInterventionDto } from './dto/create-intervention.dto';
+import { UpdateInterventionDto } from './dto/update-intervention.dto';
 
 @ApiTags('interventions')
 @ApiBearerAuth()
@@ -37,6 +46,10 @@ export class InterventionsController {
     @Param('id') id: string,
     @Body() body: { outcomeNotes?: string; postInterventionScore?: number },
   ) {
-    return this.interventionsService.close(id, body.outcomeNotes, body.postInterventionScore);
+    return this.interventionsService.close(
+      id,
+      body.outcomeNotes,
+      body.postInterventionScore,
+    );
   }
 }

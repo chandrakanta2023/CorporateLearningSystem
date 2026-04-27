@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { User } from './user.entity';
 import { Course } from './course.entity';
 
@@ -55,7 +63,9 @@ export class Enrollment {
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @ManyToOne(() => Course, (course) => course.enrollments, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Course, (course) => course.enrollments, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'courseId' })
   course: Course;
 }

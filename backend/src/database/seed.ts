@@ -36,19 +36,87 @@ const dataSource = new DataSource({
 });
 
 const firstNames = [
-  'Aarav', 'Vivaan', 'Aditya', 'Vihaan', 'Arjun', 'Sai', 'Krishna', 'Ishaan',
-  'Rohan', 'Kunal', 'Siddharth', 'Rahul', 'Amit', 'Manish', 'Nikhil', 'Pranav',
-  'Yash', 'Dhruv', 'Harsh', 'Aniket', 'Lakshya', 'Tanmay', 'Omkar', 'Mihir',
-  'Aanya', 'Diya', 'Anaya', 'Ira', 'Saanvi', 'Myra', 'Anika', 'Kavya',
-  'Priya', 'Neha', 'Riya', 'Ishita', 'Sneha', 'Pooja', 'Shreya', 'Aditi',
-  'Nisha', 'Meera', 'Anjali', 'Tanya', 'Swati', 'Ritu', 'Nandini', 'Payal',
+  'Aarav',
+  'Vivaan',
+  'Aditya',
+  'Vihaan',
+  'Arjun',
+  'Sai',
+  'Krishna',
+  'Ishaan',
+  'Rohan',
+  'Kunal',
+  'Siddharth',
+  'Rahul',
+  'Amit',
+  'Manish',
+  'Nikhil',
+  'Pranav',
+  'Yash',
+  'Dhruv',
+  'Harsh',
+  'Aniket',
+  'Lakshya',
+  'Tanmay',
+  'Omkar',
+  'Mihir',
+  'Aanya',
+  'Diya',
+  'Anaya',
+  'Ira',
+  'Saanvi',
+  'Myra',
+  'Anika',
+  'Kavya',
+  'Priya',
+  'Neha',
+  'Riya',
+  'Ishita',
+  'Sneha',
+  'Pooja',
+  'Shreya',
+  'Aditi',
+  'Nisha',
+  'Meera',
+  'Anjali',
+  'Tanya',
+  'Swati',
+  'Ritu',
+  'Nandini',
+  'Payal',
 ];
 
 const lastNames = [
-  'Sharma', 'Verma', 'Patel', 'Gupta', 'Reddy', 'Nair', 'Menon', 'Iyer',
-  'Rao', 'Singh', 'Kumar', 'Joshi', 'Bhat', 'Das', 'Sen', 'Chatterjee',
-  'Mukherjee', 'Banerjee', 'Kapoor', 'Malhotra', 'Arora', 'Jain', 'Agarwal',
-  'Saxena', 'Mishra', 'Pandey', 'Yadav', 'Tiwari', 'Kulkarni', 'Deshmukh',
+  'Sharma',
+  'Verma',
+  'Patel',
+  'Gupta',
+  'Reddy',
+  'Nair',
+  'Menon',
+  'Iyer',
+  'Rao',
+  'Singh',
+  'Kumar',
+  'Joshi',
+  'Bhat',
+  'Das',
+  'Sen',
+  'Chatterjee',
+  'Mukherjee',
+  'Banerjee',
+  'Kapoor',
+  'Malhotra',
+  'Arora',
+  'Jain',
+  'Agarwal',
+  'Saxena',
+  'Mishra',
+  'Pandey',
+  'Yadav',
+  'Tiwari',
+  'Kulkarni',
+  'Deshmukh',
 ];
 
 const departments = [
@@ -64,7 +132,12 @@ const departments = [
   'Procurement',
 ];
 
-const courseSeed: Array<Pick<Course, 'title' | 'description' | 'type' | 'durationHours' | 'department'>> = [
+const courseSeed: Array<
+  Pick<
+    Course,
+    'title' | 'description' | 'type' | 'durationHours' | 'department'
+  >
+> = [
   {
     title: 'Cybersecurity Basics',
     description: 'Mandatory annual security awareness program',
@@ -156,7 +229,10 @@ function pickManyUnique<T>(arr: T[], count: number): T[] {
 }
 
 function slugify(input: string): string {
-  return input.toLowerCase().replace(/[^a-z0-9]+/g, '.').replace(/^\.|\.$/g, '');
+  return input
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '.')
+    .replace(/^\.|\.$/g, '');
 }
 
 async function seed() {
@@ -216,13 +292,17 @@ async function seed() {
   for (let i = 1; i <= targetManagers; i += 1) {
     const firstName = firstNames[(i - 1) % firstNames.length];
     const lastName = lastNames[(i - 1) % lastNames.length];
-    managerEmails.push(`manager.${slugify(firstName)}.${slugify(lastName)}.${i}@company.com`);
+    managerEmails.push(
+      `manager.${slugify(firstName)}.${slugify(lastName)}.${i}@company.com`,
+    );
   }
 
   for (let i = 1; i <= targetEmployees; i += 1) {
     const firstName = firstNames[(i + 7) % firstNames.length];
     const lastName = lastNames[(i + 11) % lastNames.length];
-    employeeEmails.push(`employee.${slugify(firstName)}.${slugify(lastName)}.${i}@company.com`);
+    employeeEmails.push(
+      `employee.${slugify(firstName)}.${slugify(lastName)}.${i}@company.com`,
+    );
   }
 
   const existingUsers = await userRepo.find({
@@ -285,15 +365,19 @@ async function seed() {
     await userRepo.save(employeesToCreate);
   }
 
-  const employees = await userRepo.find({ where: { email: In(employeeEmails) } });
+  const employees = await userRepo.find({
+    where: { email: In(employeeEmails) },
+  });
 
   // Enroll each employee in 3-5 courses (avoid duplicates)
-  const allTargetUsers = [admin, ...managers, ...employees].filter(Boolean) as User[];
+  const allTargetUsers = [admin, ...managers, ...employees].filter(Boolean);
 
   const existingEnrollments = await enrollmentRepo.find({
     where: { userId: In(allTargetUsers.map((u) => u.id)) },
   });
-  const enrollmentKey = new Set(existingEnrollments.map((e) => `${e.userId}:${e.courseId}`));
+  const enrollmentKey = new Set(
+    existingEnrollments.map((e) => `${e.userId}:${e.courseId}`),
+  );
 
   const enrollmentsToCreate: Enrollment[] = [];
 
@@ -329,8 +413,10 @@ async function seed() {
           courseId: course.id,
           status,
           progressPercentage: progress,
-          startedAt: status === EnrollmentStatus.NOT_STARTED ? undefined : new Date(),
-          completedAt: status === EnrollmentStatus.COMPLETED ? new Date() : undefined,
+          startedAt:
+            status === EnrollmentStatus.NOT_STARTED ? undefined : new Date(),
+          completedAt:
+            status === EnrollmentStatus.COMPLETED ? new Date() : undefined,
           dueDate: new Date(Date.now() + randInt(7, 90) * 24 * 60 * 60 * 1000),
           remindersSent: randInt(0, 3),
           lastReminderSentAt: randInt(0, 1) ? new Date() : undefined,
@@ -412,19 +498,16 @@ async function seed() {
   };
 
   await dataSource.destroy();
-  // eslint-disable-next-line no-console
+
   console.log('Bulk seed completed. Login: admin@company.com / Password123!');
-  // eslint-disable-next-line no-console
+
   console.log(counts);
 }
 
 seed().catch(async (error) => {
-  // eslint-disable-next-line no-console
   console.error(error);
   if (dataSource.isInitialized) {
     await dataSource.destroy();
   }
   process.exit(1);
 });
-
-

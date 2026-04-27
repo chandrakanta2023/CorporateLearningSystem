@@ -3,7 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AttendanceRecord } from '../entities/attendance-record.entity';
 import { AssessmentRecord } from '../entities/assessment-record.entity';
-import { CompetencyMilestone, CompetencyStatus } from '../entities/competency-milestone.entity';
+import {
+  CompetencyMilestone,
+  CompetencyStatus,
+} from '../entities/competency-milestone.entity';
 import { AttendanceInput } from './dto/create-attendance.dto';
 import { AssessmentInput } from './dto/create-assessment.dto';
 import { CompetencyInput } from './dto/create-competency.dto';
@@ -21,12 +24,16 @@ export class IngestionService {
 
   async ingestAttendance(records: AttendanceInput[]) {
     if (!Array.isArray(records) || records.length === 0) {
-      throw new BadRequestException('Attendance payload must be a non-empty array');
+      throw new BadRequestException(
+        'Attendance payload must be a non-empty array',
+      );
     }
 
     const entities = records.map((record) => {
       if (!record.userId || !record.courseId || !record.sessionDate) {
-        throw new BadRequestException('userId, courseId, and sessionDate are required for attendance records');
+        throw new BadRequestException(
+          'userId, courseId, and sessionDate are required for attendance records',
+        );
       }
 
       return this.attendanceRepository.create({
@@ -34,7 +41,8 @@ export class IngestionService {
         courseId: record.courseId,
         sessionDate: record.sessionDate,
         attended: record.attended,
-        attendancePercentage: record.attendancePercentage ?? (record.attended ? 100 : 0),
+        attendancePercentage:
+          record.attendancePercentage ?? (record.attended ? 100 : 0),
         sourceSystem: record.sourceSystem ?? 'manual',
       });
     });
@@ -45,12 +53,16 @@ export class IngestionService {
 
   async ingestAssessments(records: AssessmentInput[]) {
     if (!Array.isArray(records) || records.length === 0) {
-      throw new BadRequestException('Assessment payload must be a non-empty array');
+      throw new BadRequestException(
+        'Assessment payload must be a non-empty array',
+      );
     }
 
     const entities = records.map((record) => {
       if (!record.userId || !record.courseId || !record.assessmentName) {
-        throw new BadRequestException('userId, courseId, and assessmentName are required for assessment records');
+        throw new BadRequestException(
+          'userId, courseId, and assessmentName are required for assessment records',
+        );
       }
 
       if (record.maxScore <= 0) {
@@ -76,21 +88,29 @@ export class IngestionService {
 
   async ingestCompetencies(records: CompetencyInput[]) {
     if (!Array.isArray(records) || records.length === 0) {
-      throw new BadRequestException('Competency payload must be a non-empty array');
+      throw new BadRequestException(
+        'Competency payload must be a non-empty array',
+      );
     }
 
     const result: CompetencyMilestone[] = [];
 
     for (const record of records) {
       if (!record.userId || !record.competencyCode || !record.competencyName) {
-        throw new BadRequestException('userId, competencyCode, and competencyName are required for competency records');
+        throw new BadRequestException(
+          'userId, competencyCode, and competencyName are required for competency records',
+        );
       }
 
       const existing = await this.competencyRepository.findOne({
         where: { userId: record.userId, competencyCode: record.competencyCode },
       });
 
-      const status = record.status ?? (record.currentLevel >= record.targetLevel ? CompetencyStatus.ACHIEVED : CompetencyStatus.IN_PROGRESS);
+      const status =
+        record.status ??
+        (record.currentLevel >= record.targetLevel
+          ? CompetencyStatus.ACHIEVED
+          : CompetencyStatus.IN_PROGRESS);
 
       if (existing) {
         existing.currentLevel = record.currentLevel;

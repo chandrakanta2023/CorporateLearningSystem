@@ -4,9 +4,15 @@ import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { AttendanceRecord } from '../entities/attendance-record.entity';
 import { AssessmentRecord } from '../entities/assessment-record.entity';
-import { CompetencyMilestone, CompetencyStatus } from '../entities/competency-milestone.entity';
+import {
+  CompetencyMilestone,
+  CompetencyStatus,
+} from '../entities/competency-milestone.entity';
 import { RiskRule } from '../entities/risk-rule.entity';
-import { RiskClassification, RiskLevel } from '../entities/risk-classification.entity';
+import {
+  RiskClassification,
+  RiskLevel,
+} from '../entities/risk-classification.entity';
 
 @Injectable()
 export class RiskEvaluationsService {
@@ -43,35 +49,50 @@ export class RiskEvaluationsService {
 
       const avgAttendance =
         attendance.length > 0
-          ? attendance.reduce((sum, a) => sum + Number(a.attendancePercentage), 0) / attendance.length
+          ? attendance.reduce(
+              (sum, a) => sum + Number(a.attendancePercentage),
+              0,
+            ) / attendance.length
           : 100;
 
       const avgScore =
         assessments.length > 0
-          ?
-            assessments.reduce((sum, a) => sum + (Number(a.score) / Number(a.maxScore)) * 100, 0) /
-            assessments.length
+          ? assessments.reduce(
+              (sum, a) => sum + (Number(a.score) / Number(a.maxScore)) * 100,
+              0,
+            ) / assessments.length
           : 100;
 
-      const achievedCount = competencies.filter((c) => c.status === CompetencyStatus.ACHIEVED).length;
-      const competencyRate = competencies.length > 0 ? (achievedCount / competencies.length) * 100 : 100;
+      const achievedCount = competencies.filter(
+        (c) => c.status === CompetencyStatus.ACHIEVED,
+      ).length;
+      const competencyRate =
+        competencies.length > 0
+          ? (achievedCount / competencies.length) * 100
+          : 100;
 
       let riskScore = 0;
       const reasons: string[] = [];
 
       if (avgAttendance < 75) {
         riskScore += (75 - avgAttendance) * 0.8;
-        reasons.push(`Attendance below threshold (${avgAttendance.toFixed(1)}%)`);
+        reasons.push(
+          `Attendance below threshold (${avgAttendance.toFixed(1)}%)`,
+        );
       }
 
       if (avgScore < 70) {
         riskScore += (70 - avgScore) * 1.0;
-        reasons.push(`Assessment score below threshold (${avgScore.toFixed(1)}%)`);
+        reasons.push(
+          `Assessment score below threshold (${avgScore.toFixed(1)}%)`,
+        );
       }
 
       if (competencyRate < 70) {
         riskScore += (70 - competencyRate) * 0.7;
-        reasons.push(`Competency completion below threshold (${competencyRate.toFixed(1)}%)`);
+        reasons.push(
+          `Competency completion below threshold (${competencyRate.toFixed(1)}%)`,
+        );
       }
 
       const ruleBonus = Math.min(activeRules.length * 2, 10);
@@ -93,7 +114,10 @@ export class RiskEvaluationsService {
         ruleId: activeRules[0]?.id ?? null,
         riskLevel,
         riskScore: Number(riskScore.toFixed(2)),
-        reason: reasons.length > 0 ? reasons.join('; ') : 'No active risk factors detected',
+        reason:
+          reasons.length > 0
+            ? reasons.join('; ')
+            : 'No active risk factors detected',
         evaluatedAt,
       });
 
@@ -103,7 +127,8 @@ export class RiskEvaluationsService {
     return {
       evaluatedUsers: users.length,
       activeRules: activeRules.length,
-      critical: results.filter((r) => r.riskLevel === RiskLevel.CRITICAL).length,
+      critical: results.filter((r) => r.riskLevel === RiskLevel.CRITICAL)
+        .length,
       high: results.filter((r) => r.riskLevel === RiskLevel.HIGH).length,
       medium: results.filter((r) => r.riskLevel === RiskLevel.MEDIUM).length,
       low: results.filter((r) => r.riskLevel === RiskLevel.LOW).length,

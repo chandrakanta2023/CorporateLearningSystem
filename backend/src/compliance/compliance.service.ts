@@ -2,8 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
-import { Enrollment } from '../entities/enrollment.entity';
-import { Intervention } from '../entities/intervention.entity';
+import { Enrollment, EnrollmentStatus } from '../entities/enrollment.entity';
+import {
+  Intervention,
+  InterventionStatus,
+} from '../entities/intervention.entity';
 import { ComplianceReport } from '../entities/compliance-report.entity';
 
 @Injectable()
@@ -38,14 +41,17 @@ export class ComplianceService {
       if (rows.length === 0) {
         return true;
       }
-      return rows.every((row) => row.status === 'completed');
+      return rows.every((row) => row.status === EnrollmentStatus.COMPLETED);
     }).length;
 
     const totalEmployees = users.length;
-    const complianceRate = totalEmployees > 0 ? (compliantUsers / totalEmployees) * 100 : 0;
+    const complianceRate =
+      totalEmployees > 0 ? (compliantUsers / totalEmployees) * 100 : 0;
 
     const activeInterventions = interventions.filter(
-      (item) => item.status === 'pending' || item.status === 'active',
+      (item) =>
+        item.status === InterventionStatus.PENDING ||
+        item.status === InterventionStatus.ACTIVE,
     ).length;
 
     const report = this.complianceReportRepository.create({
@@ -57,7 +63,9 @@ export class ComplianceService {
       activeInterventions,
       metadata: {
         totalEnrollments: enrollments.length,
-        completedEnrollments: enrollments.filter((row) => row.status === 'completed').length,
+        completedEnrollments: enrollments.filter(
+          (row) => row.status === EnrollmentStatus.COMPLETED,
+        ).length,
       },
     });
 

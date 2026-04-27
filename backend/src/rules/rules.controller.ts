@@ -1,11 +1,19 @@
-import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { RulesService } from './rules.service';
-import type { CreateRuleDto } from './dto/create-rule.dto';
-import type { UpdateRuleDto } from './dto/update-rule.dto';
+import { CreateRuleDto } from './dto/create-rule.dto';
+import { UpdateRuleDto } from './dto/update-rule.dto';
 
 @ApiTags('rules')
 @ApiBearerAuth()

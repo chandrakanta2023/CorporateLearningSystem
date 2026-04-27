@@ -8,7 +8,7 @@ import { AuditLogService } from './audit-log.service';
 @ApiTags('audit')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Controller('api/v1/audit')
+@Controller('audit')
 export class AuditController {
   constructor(private readonly auditLogService: AuditLogService) {}
 

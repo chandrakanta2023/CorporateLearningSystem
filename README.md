@@ -71,15 +71,11 @@ chmod +x ./setup-any-machine.sh
 This will:
 - install backend/frontend dependencies
 - create backend `.env` from template (if missing)
-- create database (`corporate_learning_db`) if missing
-- execute SQL DDL + INSERT scripts automatically:
-  - `backend/sql/001_schema.sql`
-  - `backend/sql/002_seed_data.sql`
+- run the canonical backend seed flow (`npm run seed`) to initialize schema and demo data
 
 ## Data Migration To New DB
 
-Primary setup on new machines does not require old DB connectivity.
-It uses project-owned SQL DDL + INSERT scripts.
+Primary setup on new machines uses the canonical seed flow (`backend/src/seed.ts`) for schema + demo data initialization.
 
 If you still have old local `sqljs` data and want to migrate to PostgreSQL:
 

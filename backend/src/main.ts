@@ -18,7 +18,9 @@ async function bootstrap() {
     .split(',')
     .map((origin) => origin.trim())
     .filter(Boolean);
-  const corsOrigins = Array.from(new Set([...defaultCorsOrigins, ...envCorsOrigins]));
+  const corsOrigins = Array.from(
+    new Set([...defaultCorsOrigins, ...envCorsOrigins]),
+  );
 
   // Enable CORS for frontend connection
   app.enableCors({
@@ -41,7 +43,9 @@ async function bootstrap() {
   // Swagger / OpenAPI documentation
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Corporate Learning System API')
-    .setDescription('API for tracking employee learning progress, interventions, and compliance')
+    .setDescription(
+      'API for tracking employee learning progress, interventions, and compliance',
+    )
     .setVersion('1.0')
     .addBearerAuth()
     .addTag('auth', 'Authentication endpoints')
@@ -65,4 +69,4 @@ async function bootstrap() {
   logger.log(`📖 API docs: http://localhost:${port}/api/docs`);
   logger.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 }
-bootstrap();
+void bootstrap();

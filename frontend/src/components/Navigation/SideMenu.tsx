@@ -16,7 +16,7 @@ interface SideMenuProps {
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-function SideMenu(_props: SideMenuProps) {
+function SideMenu({ collapsed = false }: SideMenuProps) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -47,6 +47,7 @@ function SideMenu(_props: SideMenuProps) {
     <Menu
       theme="dark"
       mode="inline"
+      inlineCollapsed={collapsed}
       selectedKeys={[selectedKey]}
       onClick={handleMenuClick}
       items={items}

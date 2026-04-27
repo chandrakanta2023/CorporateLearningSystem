@@ -32,6 +32,10 @@ export class AuditLogService {
   }
 
   async findByUser(userId: string, limit = 50) {
-    return this.repo.find({ where: { userId }, order: { createdAt: 'DESC' }, take: limit });
+    return this.repo.find({
+      where: { userId },
+      order: { createdAt: 'DESC' },
+      take: limit,
+    });
   }
 }

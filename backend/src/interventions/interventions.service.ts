@@ -1,7 +1,14 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Intervention, InterventionStatus } from '../entities/intervention.entity';
+import {
+  Intervention,
+  InterventionStatus,
+} from '../entities/intervention.entity';
 import { CreateInterventionDto } from './dto/create-intervention.dto';
 import { UpdateInterventionDto } from './dto/update-intervention.dto';
 
@@ -24,8 +31,15 @@ export class InterventionsService {
   }
 
   async create(payload: CreateInterventionDto) {
-    if (!payload.enrollmentId || !payload.userId || !payload.courseId || !payload.message) {
-      throw new BadRequestException('enrollmentId, userId, courseId and message are required');
+    if (
+      !payload.enrollmentId ||
+      !payload.userId ||
+      !payload.courseId ||
+      !payload.message
+    ) {
+      throw new BadRequestException(
+        'enrollmentId, userId, courseId and message are required',
+      );
     }
 
     const intervention = this.interventionRepository.create();
@@ -38,22 +52,29 @@ export class InterventionsService {
     intervention.recipientEmail = payload.recipientEmail ?? null;
     intervention.assignedBy = payload.assignedBy ?? null;
     intervention.dueDate = payload.dueDate ? new Date(payload.dueDate) : null;
-    intervention.progress = intervention.status === InterventionStatus.COMPLETED ? 100 : 0;
+    intervention.progress =
+      intervention.status === InterventionStatus.COMPLETED ? 100 : 0;
     intervention.preInterventionScore = payload.preInterventionScore ?? null;
-    intervention.sentAt = intervention.status === InterventionStatus.ACTIVE ? new Date() : null;
+    intervention.sentAt =
+      intervention.status === InterventionStatus.ACTIVE ? new Date() : null;
 
     return this.interventionRepository.save(intervention);
   }
 
   async update(id: string, payload: UpdateInterventionDto) {
-    const intervention = await this.interventionRepository.findOne({ where: { id } });
+    const intervention = await this.interventionRepository.findOne({
+      where: { id },
+    });
     if (!intervention) {
       throw new NotFoundException('Intervention not found');
     }
 
     if (payload.status !== undefined) {
       intervention.status = payload.status;
-      if (payload.status === InterventionStatus.ACTIVE && !intervention.sentAt) {
+      if (
+        payload.status === InterventionStatus.ACTIVE &&
+        !intervention.sentAt
+      ) {
         intervention.sentAt = new Date();
       }
       if (payload.status === InterventionStatus.COMPLETED) {
@@ -85,7 +106,11 @@ export class InterventionsService {
     return this.interventionRepository.save(intervention);
   }
 
-  async close(id: string, outcomeNotes?: string, postInterventionScore?: number) {
+  async close(
+    id: string,
+    outcomeNotes?: string,
+    postInterventionScore?: number,
+  ) {
     return this.update(id, {
       status: InterventionStatus.COMPLETED,
       outcomeNotes,
@@ -97,19 +122,32 @@ export class InterventionsService {
   async summary() {
     const rows = await this.interventionRepository.find();
     const total = rows.length;
-    const pending = rows.filter((row) => row.status === InterventionStatus.PENDING).length;
-    const active = rows.filter((row) => row.status === InterventionStatus.ACTIVE).length;
-    const completed = rows.filter((row) => row.status === InterventionStatus.COMPLETED).length;
-    const failed = rows.filter((row) => row.status === InterventionStatus.FAILED).length;
+    const pending = rows.filter(
+      (row) => row.status === InterventionStatus.PENDING,
+    ).length;
+    const active = rows.filter(
+      (row) => row.status === InterventionStatus.ACTIVE,
+    ).length;
+    const completed = rows.filter(
+      (row) => row.status === InterventionStatus.COMPLETED,
+    ).length;
+    const failed = rows.filter(
+      (row) => row.status === InterventionStatus.FAILED,
+    ).length;
 
-    const scored = rows.filter((row) => row.preInterventionScore !== null && row.postInterventionScore !== null);
+    const scored = rows.filter(
+      (row) =>
+        row.preInterventionScore !== null && row.postInterventionScore !== null,
+    );
     const avgImprovement =
       scored.length > 0
         ? Number(
             (
               scored.reduce(
                 (sum, row) =>
-                  sum + (Number(row.postInterventionScore) - Number(row.preInterventionScore)),
+                  sum +
+                  (Number(row.postInterventionScore) -
+                    Number(row.preInterventionScore)),
                 0,
               ) / scored.length
             ).toFixed(2),
@@ -122,7 +160,8 @@ export class InterventionsService {
       active,
       completed,
       failed,
-      successRate: total > 0 ? Number(((completed / total) * 100).toFixed(2)) : 0,
+      successRate:
+        total > 0 ? Number(((completed / total) * 100).toFixed(2)) : 0,
       avgImprovement,
     };
   }

@@ -20,10 +20,9 @@ async function initDb() {
 
   if (existsResult.rowCount === 0) {
     await adminClient.query(`CREATE DATABASE "${db.database}"`);
-    // eslint-disable-next-line no-console
+
     console.log(`Database created: ${db.database}`);
   } else {
-    // eslint-disable-next-line no-console
     console.log(`Database already exists: ${db.database}`);
   }
 
@@ -31,7 +30,6 @@ async function initDb() {
 }
 
 initDb().catch((error) => {
-  // eslint-disable-next-line no-console
   console.error(error);
   process.exit(1);
 });

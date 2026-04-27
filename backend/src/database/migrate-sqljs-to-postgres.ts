@@ -1,12 +1,7 @@
 import 'reflect-metadata';
 import { config } from 'dotenv';
 import { DataSource } from 'typeorm';
-import {
-  Course,
-  Enrollment,
-  Intervention,
-  User,
-} from '../entities';
+import { Course, Enrollment, Intervention, User } from '../entities';
 import { getDbEnv } from './db-config';
 
 config();
@@ -75,9 +70,8 @@ async function migrateSqljsToPostgres() {
     if (!existing) await interventionRepo.save(row);
   }
 
-  // eslint-disable-next-line no-console
   console.log('Migration completed.');
-  // eslint-disable-next-line no-console
+
   console.log({
     users: sourceUsers.length,
     courses: sourceCourses.length,
@@ -90,7 +84,6 @@ async function migrateSqljsToPostgres() {
 }
 
 migrateSqljsToPostgres().catch(async (error) => {
-  // eslint-disable-next-line no-console
   console.error(error);
   if (source.isInitialized) await source.destroy();
   if (target.isInitialized) await target.destroy();
