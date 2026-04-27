@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import { Alert, Button, Card, Form, Input, Typography } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { authApi } from '../services/api';
@@ -18,8 +19,12 @@ export default function Login() {
       const token = response.accessToken || response.access_token;
       setSession(token, response.user);
       navigate('/dashboard', { replace: true });
-    } catch {
-      setError('Invalid credentials. Try admin@company.com / Admin@1234');
+    } catch (loginError) {
+      if (axios.isAxiosError(loginError) && !loginError.response) {
+        setError('Unable to connect to the server. Please check that the backend is running.');
+      } else {
+        setError('Invalid email or password.');
+      }
     } finally {
       setLoading(false);
     }
@@ -60,7 +65,7 @@ export default function Login() {
 
           {error && (
             <Form.Item>
-              <Alert type="error" message={error} showIcon />
+              <Alert type="error" title={error} showIcon />
             </Form.Item>
           )}
 
