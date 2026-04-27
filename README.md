@@ -53,6 +53,47 @@ npm run dev
 - Frontend: `http://localhost:5173`
 - Backend health: `http://localhost:3000/health`
 
+## One-Command Setup (Any Machine)
+
+### Windows (PowerShell)
+
+```powershell
+.\setup-any-machine.ps1
+```
+
+### macOS/Linux
+
+```bash
+chmod +x ./setup-any-machine.sh
+./setup-any-machine.sh
+```
+
+This will:
+- install backend/frontend dependencies
+- create backend `.env` from template (if missing)
+- create database (`corporate_learning_db`) if missing
+- execute SQL DDL + INSERT scripts automatically:
+  - `backend/sql/001_schema.sql`
+  - `backend/sql/002_seed_data.sql`
+
+## Data Migration To New DB
+
+Primary setup on new machines does not require old DB connectivity.
+It uses project-owned SQL DDL + INSERT scripts.
+
+If you still have old local `sqljs` data and want to migrate to PostgreSQL:
+
+1. Ensure `backend/.env` points to PostgreSQL (`DB_TYPE=postgres`)
+2. Keep `DB_SQLJS_PATH` set to source file path (default `.data/dev.sqlite`)
+3. Run:
+
+```powershell
+cd backend
+npm run db:migrate:sqljs-to-postgres
+```
+
+After migration, start backend/frontend normally.
+
 ## Project Structure
 
 ```text

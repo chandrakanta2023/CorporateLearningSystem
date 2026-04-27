@@ -19,7 +19,7 @@ export class Course {
   description: string;
 
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: CourseType,
     default: CourseType.OPTIONAL,
   })

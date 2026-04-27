@@ -3,6 +3,7 @@ import { Layout, Button } from 'antd';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import SideMenu from '../Navigation/SideMenu';
 import './MainLayout.css';
+import { useNavigate } from 'react-router-dom';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -12,9 +13,16 @@ const { Header, Sider, Content, Footer } = Layout;
 
 function MainLayout({ children }: MainLayoutProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
 
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_user');
+    navigate('/login');
   };
 
   return (
@@ -66,7 +74,7 @@ function MainLayout({ children }: MainLayoutProps) {
           <div style={{ fontSize: '1.125rem', fontWeight: 600, color: '#0f4c81' }}>
             Corporate Learning System
           </div>
-          <div style={{ width: '40px' }} />
+          <Button onClick={logout}>Logout</Button>
         </Header>
 
         <Content

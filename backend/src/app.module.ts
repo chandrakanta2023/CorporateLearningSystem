@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+﻿import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -23,6 +23,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { RiskEvaluationsModule } from './risk-evaluations/risk-evaluations.module';
 import { InterventionsModule } from './interventions/interventions.module';
 import { ComplianceModule } from './compliance/compliance.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -49,7 +51,7 @@ import { ComplianceModule } from './compliance/compliance.module';
         RiskClassification,
         ComplianceReport,
       ],
-      synchronize: process.env.NODE_ENV === 'development', // Only in development!
+      synchronize: process.env.NODE_ENV === 'development',
       logging: process.env.NODE_ENV === 'development',
     }),
     HealthModule,
@@ -60,6 +62,8 @@ import { ComplianceModule } from './compliance/compliance.module';
     RiskEvaluationsModule,
     InterventionsModule,
     ComplianceModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
