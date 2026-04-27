@@ -1,4 +1,5 @@
-﻿import axios from 'axios';
+import axios from 'axios';
+import { clearSession, getAccessToken } from './auth';
 
 const backendBaseUrl =
   import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') || 'http://localhost:3000';
@@ -12,13 +13,38 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('auth_token');
+  const token = getAccessToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error?.response?.status === 401) {
+      clearSession();
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  },
+);
+
+export interface AuthResponse {
+  access_token: string;
+  accessToken?: string;
+  user: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+    department?: string;
+  };
+}
 export interface HealthResponse {
   status: string;
   timestamp: number;
@@ -138,18 +164,6 @@ export interface RegisterRequest {
   department?: string;
 }
 
-export interface LoginResponse {
-  access_token: string;
-  user: {
-    id: string;
-    email: string;
-    role: string;
-    firstName: string;
-    lastName: string;
-    department?: string;
-  };
-}
-
 export const healthApi = {
   check: async (): Promise<HealthResponse> => {
     const response = await axios.get<HealthResponse>(`${backendBaseUrl}/health`, {
@@ -160,12 +174,12 @@ export const healthApi = {
 };
 
 export const authApi = {
-  login: async (payload: LoginRequest): Promise<LoginResponse> => {
-    const response = await api.post<LoginResponse>('/auth/login', payload);
+  login: async (payload: LoginRequest): Promise<AuthResponse> => {
+    const response = await api.post<AuthResponse>('/auth/login', payload);
     return response.data;
   },
-  register: async (payload: RegisterRequest): Promise<LoginResponse> => {
-    const response = await api.post<LoginResponse>('/auth/register', payload);
+  register: async (payload: RegisterRequest): Promise<AuthResponse> => {
+    const response = await api.post<AuthResponse>('/auth/register', payload);
     return response.data;
   },
   profile: async () => {

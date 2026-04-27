@@ -2,22 +2,24 @@ import { useState } from 'react';
 import { Alert, Button, Card, Form, Input, Typography } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { authApi } from '../services/api';
+import { setSession } from '../services/auth';
+
+const { Title, Text } = Typography;
 
 export default function Login() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
-
   const onFinish = async (values: { email: string; password: string }) => {
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      setError(null);
       const response = await authApi.login(values);
-      localStorage.setItem('auth_token', response.access_token);
-      localStorage.setItem('auth_user', JSON.stringify(response.user));
-      navigate('/');
+      const token = response.accessToken || response.access_token;
+      setSession(token, response.user);
+      navigate('/dashboard', { replace: true });
     } catch {
-      setError('Invalid credentials. Try admin@company.com / Password123!');
+      setError('Invalid credentials. Try admin@company.com / Admin@1234');
     } finally {
       setLoading(false);
     }
@@ -27,41 +29,42 @@ export default function Login() {
     <div
       style={{
         minHeight: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        background: 'linear-gradient(135deg, #e8f0fb 0%, #f7fbff 100%)',
-        padding: '1rem',
+        display: 'grid',
+        placeItems: 'center',
+        background: 'linear-gradient(135deg, #f4f7fb 0%, #dce8f5 100%)',
+        padding: 16,
       }}
     >
-      <Card style={{ width: '100%', maxWidth: 440 }}>
-        <Typography.Title level={3} style={{ marginBottom: 8 }}>
-          Corporate Learning Login
-        </Typography.Title>
-        <Typography.Paragraph type="secondary">
-          Sign in to access dashboard and interventions.
-        </Typography.Paragraph>
+      <Card style={{ width: '100%', maxWidth: 420, boxShadow: '0 12px 36px rgba(15, 76, 129, 0.18)' }}>
+        <Title level={3} style={{ marginBottom: 8 }}>
+          Corporate Learning System
+        </Title>
+        <Text type="secondary">Sign in to continue</Text>
 
-        {error && <Alert type="error" message={error} style={{ marginBottom: 16 }} />}
-
-        <Form layout="vertical" onFinish={onFinish}>
+        <Form layout="vertical" style={{ marginTop: 20 }} onFinish={onFinish} autoComplete="off">
           <Form.Item
             label="Email"
             name="email"
-            initialValue="admin@company.com"
-            rules={[{ required: true, type: 'email' }]}
+            rules={[{ required: true, message: 'Please enter email' }, { type: 'email' }]}
           >
-            <Input />
+            <Input placeholder="admin@company.com" />
           </Form.Item>
+
           <Form.Item
             label="Password"
             name="password"
-            initialValue="Password123!"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: 'Please enter password' }]}
           >
-            <Input.Password />
+            <Input.Password placeholder="Enter password" />
           </Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading} block>
+
+          {error && (
+            <Form.Item>
+              <Alert type="error" message={error} showIcon />
+            </Form.Item>
+          )}
+
+          <Button htmlType="submit" type="primary" block loading={loading}>
             Sign In
           </Button>
         </Form>
