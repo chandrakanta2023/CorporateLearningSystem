@@ -1,4 +1,4 @@
-import { Menu, type MenuProps } from 'antd';
+﻿import { Menu, type MenuProps } from 'antd';
 import {
   DashboardOutlined,
   FileTextOutlined,
@@ -7,7 +7,7 @@ import {
   BarChartOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { useState } from 'react';
+import { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 interface SideMenuProps {
@@ -17,59 +17,29 @@ interface SideMenuProps {
 type MenuItem = Required<MenuProps>['items'][number];
 
 function SideMenu(_props: SideMenuProps) {
-  const navigate = useNavigate();
   const location = useLocation();
-  const [selectedKey, setSelectedKey] = useState(
-    location.pathname === '/'
-      ? 'dashboard'
-      : location.pathname.replace('/', ''),
-  );
+  const navigate = useNavigate();
 
   const items: MenuItem[] = [
-    {
-      key: 'dashboard',
-      icon: <DashboardOutlined />,
-      label: 'Dashboard',
-      title: 'Dashboard',
-    },
-    {
-      key: 'risk-rules',
-      icon: <FileTextOutlined />,
-      label: 'Risk Rules',
-      title: 'Risk Rules',
-    },
-    {
-      key: 'interventions',
-      icon: <BellOutlined />,
-      label: 'Interventions',
-      title: 'Interventions',
-    },
-    {
-      key: 'compliance',
-      icon: <CheckCircleOutlined />,
-      label: 'Compliance',
-      title: 'Compliance',
-    },
-    {
-      key: 'reports',
-      icon: <BarChartOutlined />,
-      label: 'Reports',
-      title: 'Reports',
-    },
-    {
-      key: 'profile',
-      icon: <UserOutlined />,
-      label: 'Profile',
-      title: 'Profile',
-    },
+    { key: 'dashboard', icon: <DashboardOutlined />, label: 'Dashboard', title: 'Dashboard' },
+    { key: 'risk-rules', icon: <FileTextOutlined />, label: 'Risk Rules', title: 'Risk Rules' },
+    { key: 'interventions', icon: <BellOutlined />, label: 'Interventions', title: 'Interventions' },
+    { key: 'compliance', icon: <CheckCircleOutlined />, label: 'Compliance', title: 'Compliance' },
+    { key: 'reports', icon: <BarChartOutlined />, label: 'Reports', title: 'Reports' },
+    { key: 'profile', icon: <UserOutlined />, label: 'Profile', title: 'Profile' },
   ];
 
+  const selectedKey = useMemo(() => {
+    const pathname = location.pathname;
+    if (pathname.startsWith('/risk-rules')) return 'risk-rules';
+    if (pathname.startsWith('/interventions')) return 'interventions';
+    if (pathname.startsWith('/compliance')) return 'compliance';
+    if (pathname.startsWith('/reports')) return 'reports';
+    if (pathname.startsWith('/profile')) return 'profile';
+    return 'dashboard';
+  }, [location.pathname]);
+
   const handleMenuClick: MenuProps['onClick'] = (e) => {
-    setSelectedKey(e.key);
-    if (e.key === 'dashboard') {
-      navigate('/');
-      return;
-    }
     navigate(`/${e.key}`);
   };
 

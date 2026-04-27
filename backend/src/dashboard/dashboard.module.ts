@@ -1,11 +1,10 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Enrollment, Intervention, User } from '../entities';
+﻿import { Module } from '@nestjs/common';
+import { ProfilesModule } from '../profiles/profiles.module';
 import { DashboardController } from './dashboard.controller';
 import { DashboardService } from './dashboard.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Enrollment, Intervention])],
+  imports: [ProfilesModule],
   controllers: [DashboardController],
   providers: [DashboardService],
 })

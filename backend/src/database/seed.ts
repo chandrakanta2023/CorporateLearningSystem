@@ -385,7 +385,7 @@ async function seed() {
         status: pickOne([
           InterventionStatus.PENDING,
           InterventionStatus.PENDING,
-          InterventionStatus.SENT,
+          InterventionStatus.ACTIVE,
         ]),
         message:
           type === InterventionType.WARNING
@@ -426,4 +426,5 @@ seed().catch(async (error) => {
   }
   process.exit(1);
 });
+
 

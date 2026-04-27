@@ -1,5 +1,7 @@
-import { Card, Row, Col, Table, Tag, Button, Space, Select } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
+import { Card, Row, Col, Table, Tag, Button, Space, Select, message } from 'antd';
 import MainLayout from '../components/Layout/MainLayout';
+import { interventionsApi, riskEvaluationsApi, type InterventionResponse } from '../services/api';
 import './Interventions.css';
 
 interface Intervention {
@@ -67,6 +69,60 @@ const mockInterventions: Intervention[] = [
 ];
 
 export default function Interventions() {
+  const [rows, setRows] = useState<Intervention[]>(mockInterventions);
+  const [summary, setSummary] = useState({
+    total: 87,
+    active: 45,
+    completed: 28,
+    pending: 14,
+  });
+  const [statusFilter, setStatusFilter] = useState('all');
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [list, summaryData] = await Promise.all([
+          interventionsApi.list(statusFilter === 'all' ? undefined : statusFilter),
+          interventionsApi.summary(),
+        ]);
+
+        if (list.length > 0) {
+          setRows(list.map(mapIntervention));
+        }
+
+        setSummary({
+          total: summaryData.total,
+          active: summaryData.active,
+          completed: summaryData.completed,
+          pending: summaryData.pending,
+        });
+      } catch (error) {
+        console.error('Failed to load interventions, using fallback data', error);
+      }
+    };
+
+    loadData();
+  }, [statusFilter]);
+
+  const filteredRows = useMemo(() => {
+    if (statusFilter === 'all') {
+      return rows;
+    }
+    return rows.filter((row) => row.status === statusFilter);
+  }, [rows, statusFilter]);
+
+  const runRiskEvaluation = async () => {
+    try {
+      const result = await riskEvaluationsApi.run();
+      message.success(
+        `Risk evaluation completed for ${result.evaluatedUsers} employees. Critical: ${result.critical}, High: ${result.high}`,
+      );
+    } catch (error) {
+      console.error('Failed to run risk evaluation', error);
+      message.error('Failed to run risk evaluation');
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
@@ -147,14 +203,14 @@ export default function Interventions() {
         <Row gutter={[24, 24]} style={{ marginBottom: '24px' }}>
           <Col xs={24} sm={12} md={6}>
             <Card className="stat-card">
-              <div className="stat-number">87</div>
+              <div className="stat-number">{summary.total}</div>
               <div className="stat-label">Total Interventions</div>
             </Card>
           </Col>
           <Col xs={24} sm={12} md={6}>
             <Card className="stat-card">
               <div className="stat-number" style={{ color: '#faad14' }}>
-                45
+                {summary.active}
               </div>
               <div className="stat-label">In Progress</div>
             </Card>
@@ -162,7 +218,7 @@ export default function Interventions() {
           <Col xs={24} sm={12} md={6}>
             <Card className="stat-card">
               <div className="stat-number" style={{ color: '#2c9c69' }}>
-                28
+                {summary.completed}
               </div>
               <div className="stat-label">Completed</div>
             </Card>
@@ -170,7 +226,7 @@ export default function Interventions() {
           <Col xs={24} sm={12} md={6}>
             <Card className="stat-card">
               <div className="stat-number" style={{ color: '#ff7875' }}>
-                14
+                {summary.pending}
               </div>
               <div className="stat-label">Pending</div>
             </Card>
@@ -184,6 +240,8 @@ export default function Interventions() {
               <Select
                 style={{ width: '150px' }}
                 defaultValue="all"
+                value={statusFilter}
+                onChange={(value) => setStatusFilter(value)}
                 options={[
                   { label: 'All', value: 'all' },
                   { label: 'Pending', value: 'pending' },
@@ -192,11 +250,14 @@ export default function Interventions() {
                 ]}
               />
             </Space>
-            <Button type="primary">+ Create Intervention</Button>
+            <Space>
+              <Button type="primary">+ Create Intervention</Button>
+              <Button onClick={runRiskEvaluation}>Run Risk Evaluation</Button>
+            </Space>
           </Space>
           <Table
             columns={columns}
-            dataSource={mockInterventions}
+            dataSource={filteredRows}
             rowKey="id"
             pagination={{ pageSize: 10 }}
             scroll={{ x: 800 }}
@@ -205,4 +266,22 @@ export default function Interventions() {
       </div>
     </MainLayout>
   );
+}
+
+function mapIntervention(item: InterventionResponse): Intervention {
+  const status =
+    item.status === 'cancelled' || item.status === 'failed'
+      ? 'pending'
+      : (item.status as 'pending' | 'active' | 'completed');
+
+  return {
+    id: item.id,
+    employeeName: item.userId,
+    type: item.type,
+    status,
+    startDate: item.createdAt,
+    dueDate: item.dueDate ?? '',
+    progress: item.progress ?? 0,
+    assignedTo: item.assignedBy || 'System',
+  };
 }
