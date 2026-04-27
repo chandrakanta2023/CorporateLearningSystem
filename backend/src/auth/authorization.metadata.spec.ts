@@ -1,7 +1,12 @@
 import { GUARDS_METADATA } from '@nestjs/common/constants';
 import { AuditController } from '../audit/audit.controller';
+import { AuthController } from './auth.controller';
 import { ComplianceController } from '../compliance/compliance.controller';
+import { DashboardController } from '../dashboard/dashboard.controller';
 import { IngestionController } from '../ingestion/ingestion.controller';
+import { InterventionsController } from '../interventions/interventions.controller';
+import { ProfilesController } from '../profiles/profiles.controller';
+import { RiskEvaluationsController } from '../risk-evaluations/risk-evaluations.controller';
 import { RulesController } from '../rules/rules.controller';
 import { UsersController } from '../users/users.controller';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -15,6 +20,15 @@ const getRoles = (
   Reflect.getMetadata(ROLES_KEY, target[method] as object) as
     | string[]
     | undefined;
+
+const getMethodGuards = (
+  target: Record<string, unknown>,
+  method: string,
+): unknown[] =>
+  (Reflect.getMetadata(
+    GUARDS_METADATA,
+    target[method] as object,
+  ) as unknown[]) ?? [];
 
 describe('Authorization Metadata', () => {
   it('protects sensitive controllers with JwtAuthGuard and RolesGuard', () => {
@@ -98,5 +112,52 @@ describe('Authorization Metadata', () => {
       'admin',
       'hr',
     ]);
+  });
+
+  it('keeps risk evaluations role restrictions intact', () => {
+    expect(
+      getRoles(RiskEvaluationsController.prototype, 'runEvaluation'),
+    ).toEqual(['admin', 'hr']);
+    expect(getRoles(RiskEvaluationsController.prototype, 'getLatest')).toEqual([
+      'admin',
+      'hr',
+      'manager',
+    ]);
+    expect(
+      getRoles(RiskEvaluationsController.prototype, 'getLatestForUser'),
+    ).toEqual(['admin', 'hr', 'manager']);
+  });
+
+  it('keeps JWT protection on JWT-only controllers', () => {
+    const jwtOnlyControllers = [
+      DashboardController,
+      ProfilesController,
+      InterventionsController,
+    ];
+
+    for (const controller of jwtOnlyControllers) {
+      const guards = Reflect.getMetadata(
+        GUARDS_METADATA,
+        controller,
+      ) as unknown[];
+
+      expect(guards).toEqual([JwtAuthGuard]);
+    }
+  });
+
+  it('keeps auth profile endpoint protected while login and register remain public', () => {
+    const profileGuards = getMethodGuards(
+      AuthController.prototype,
+      'getProfile',
+    );
+    const loginGuards = getMethodGuards(AuthController.prototype, 'login');
+    const registerGuards = getMethodGuards(
+      AuthController.prototype,
+      'register',
+    );
+
+    expect(profileGuards).toContain(JwtAuthGuard);
+    expect(loginGuards).toHaveLength(0);
+    expect(registerGuards).toHaveLength(0);
   });
 });
