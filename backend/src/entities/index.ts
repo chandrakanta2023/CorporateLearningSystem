@@ -9,3 +9,4 @@ export { CompetencyMilestone, CompetencyStatus } from './competency-milestone.en
 export { RiskRule, RuleSeverity } from './risk-rule.entity';
 export { RiskClassification, RiskLevel } from './risk-classification.entity';
 export { ComplianceReport } from './compliance-report.entity';
+export { AuditLog } from './audit-log.entity';

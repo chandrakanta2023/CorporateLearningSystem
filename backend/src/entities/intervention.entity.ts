@@ -63,7 +63,7 @@ export class Intervention {
   @Column({ type: 'timestamp', nullable: true })
   completedAt: Date | null;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'text', nullable: true })
   errorMessage: string | null;
 
   @Column({ type: 'text', nullable: true })

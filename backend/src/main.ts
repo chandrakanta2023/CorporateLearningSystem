@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -37,11 +38,31 @@ async function bootstrap() {
     exclude: ['health'],
   });
 
+  // Swagger / OpenAPI documentation
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('Corporate Learning System API')
+    .setDescription('API for tracking employee learning progress, interventions, and compliance')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .addTag('auth', 'Authentication endpoints')
+    .addTag('dashboard', 'Dashboard summary metrics')
+    .addTag('ingestion', 'Data ingestion APIs')
+    .addTag('profiles', 'Employee learning profiles')
+    .addTag('rules', 'Risk rule management')
+    .addTag('risk-evaluations', 'Risk scoring execution')
+    .addTag('interventions', 'Intervention lifecycle management')
+    .addTag('compliance', 'Compliance report generation')
+    .addTag('audit', 'Audit trail logs')
+    .build();
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('api/docs', app, document);
+
   const port = process.env.PORT || 3000;
   await app.listen(port);
 
   logger.log(`🚀 Application is running on: http://localhost:${port}`);
   logger.log(`📊 Health check: http://localhost:${port}/health`);
+  logger.log(`📖 API docs: http://localhost:${port}/api/docs`);
   logger.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 }
 bootstrap();

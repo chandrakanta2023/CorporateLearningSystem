@@ -15,6 +15,7 @@ import {
   RiskRule,
   RiskClassification,
   ComplianceReport,
+  AuditLog,
 } from './entities';
 import { IngestionModule } from './ingestion/ingestion.module';
 import { ProfilesModule } from './profiles/profiles.module';
@@ -25,6 +26,7 @@ import { InterventionsModule } from './interventions/interventions.module';
 import { ComplianceModule } from './compliance/compliance.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { AuditModule } from './audit/audit.module';
 
 @Module({
   imports: [
@@ -50,10 +52,13 @@ import { AuthModule } from './auth/auth.module';
         RiskRule,
         RiskClassification,
         ComplianceReport,
+        AuditLog,
       ],
       synchronize: process.env.NODE_ENV === 'development',
       logging: process.env.NODE_ENV === 'development',
     }),
+    AuthModule,
+    AuditModule,
     HealthModule,
     IngestionModule,
     ProfilesModule,
@@ -63,7 +68,6 @@ import { AuthModule } from './auth/auth.module';
     InterventionsModule,
     ComplianceModule,
     UsersModule,
-    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
