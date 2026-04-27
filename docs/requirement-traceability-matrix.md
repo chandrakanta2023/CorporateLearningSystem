@@ -110,3 +110,19 @@ Done Definition for Week 1:
 - No dashboard summary metric sourced from static mock values.
 - At least one API-driven risk classification visible in UI.
 - OpenAPI spec updated and reviewable.
+
+## 9. Quality Gate Traceability
+
+| Gate ID | Gate | Current Enforcement | Evidence | Release Rule |
+|---|---|---|---|---|
+| QG1 | Backend lint | GitHub Actions (`backend` job) | `.github/workflows/ci.yml` | Must pass |
+| QG2 | Backend unit tests | GitHub Actions (`backend` job) | `.github/workflows/ci.yml` | Must pass |
+| QG3 | Backend e2e tests | GitHub Actions (`backend` job) | `.github/workflows/ci.yml` | Must pass |
+| QG4 | Backend build | GitHub Actions (`backend` job) | `.github/workflows/ci.yml` | Must pass |
+| QG5 | Frontend lint | GitHub Actions (`frontend` job) | `.github/workflows/ci.yml` | Must pass |
+| QG6 | Frontend build | GitHub Actions (`frontend` job) | `.github/workflows/ci.yml` | Must pass |
+
+Quality gate policy:
+
+1. All QG1-QG6 gates must be green for merge and release readiness.
+2. Local success without green CI is not release evidence.

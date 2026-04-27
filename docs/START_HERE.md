@@ -87,6 +87,26 @@ npm run lint
 npm run build
 ```
 
+### 3.1 CI Pass Criteria (Required for Merge/Release)
+
+GitHub Actions workflow: `.github/workflows/ci.yml`
+
+Required backend gates:
+
+1. npm ci
+2. npm run lint
+3. npm test -- --runInBand
+4. npm run test:e2e
+5. npm run build
+
+Required frontend gates:
+
+1. npm ci
+2. npm run lint
+3. npm run build
+
+Any non-green CI run blocks release readiness.
+
 ## 4. Source of Truth by Purpose
 
 - Product and business scope: requirements.md
