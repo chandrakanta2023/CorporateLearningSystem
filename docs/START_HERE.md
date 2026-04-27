@@ -45,6 +45,28 @@ npm install
 npm run dev
 ```
 
+### 2.1 Deterministic Frontend Startup (Windows)
+
+Use this sequence when you need the frontend to run on exactly port 5173.
+
+```powershell
+# From repository root
+$ports = 5173,5174
+$pids = Get-NetTCPConnection -LocalPort $ports -State Listen -ErrorAction SilentlyContinue |
+	Select-Object -ExpandProperty OwningProcess -Unique
+if ($pids) { Stop-Process -Id $pids -Force }
+
+cd frontend
+npm run dev -- --host 0.0.0.0 --port 5173 --strictPort
+```
+
+If strict startup fails, use fallback mode (auto-select free port):
+
+```powershell
+cd frontend
+npm run dev -- --host 0.0.0.0 --port 5173
+```
+
 ## 3. Validation Checklist (Run Before Development)
 
 Backend checks:

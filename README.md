@@ -52,6 +52,19 @@ npm install
 npm run dev
 ```
 
+Frontend deterministic startup on port 5173 (Windows):
+
+```powershell
+# From repository root
+$ports = 5173,5174
+$pids = Get-NetTCPConnection -LocalPort $ports -State Listen -ErrorAction SilentlyContinue |
+	Select-Object -ExpandProperty OwningProcess -Unique
+if ($pids) { Stop-Process -Id $pids -Force }
+
+cd frontend
+npm run dev -- --host 0.0.0.0 --port 5173 --strictPort
+```
+
 5. Verify:
 
 - Frontend: `http://localhost:5173`

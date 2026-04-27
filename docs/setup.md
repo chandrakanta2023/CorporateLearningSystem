@@ -152,8 +152,29 @@ npm run build
 
 ### 8.4 Port Already In Use
 
-- Stop conflicting process or change port locally for the active session
-- Re-run service startup commands
+Use one of the following startup policies.
+
+Deterministic policy (enforce 5173):
+
+```powershell
+# From repository root
+$ports = 5173,5174
+$pids = Get-NetTCPConnection -LocalPort $ports -State Listen -ErrorAction SilentlyContinue |
+   Select-Object -ExpandProperty OwningProcess -Unique
+if ($pids) { Stop-Process -Id $pids -Force }
+
+cd frontend
+npm run dev -- --host 0.0.0.0 --port 5173 --strictPort
+```
+
+Flexible policy (allow fallback port):
+
+```powershell
+cd frontend
+npm run dev -- --host 0.0.0.0 --port 5173
+```
+
+If you use flexible policy, always use the URL printed by Vite in terminal output.
 
 ## 9. Onboarding Sequence After Setup
 
