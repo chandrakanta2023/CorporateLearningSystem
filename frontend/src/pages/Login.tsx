@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import { Alert, Button, Card, Form, Input, Typography } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { authApi } from '../services/api';
@@ -16,8 +17,12 @@ export default function Login() {
       localStorage.setItem('auth_token', response.access_token);
       localStorage.setItem('auth_user', JSON.stringify(response.user));
       navigate('/');
-    } catch {
-      setError('Invalid credentials. Try admin@company.com / Password123!');
+    } catch (loginError) {
+      if (axios.isAxiosError(loginError) && !loginError.response) {
+        setError('Unable to connect to the server. Please check that the backend is running.');
+      } else {
+        setError('Invalid email or password.');
+      }
     } finally {
       setLoading(false);
     }
@@ -42,13 +47,12 @@ export default function Login() {
           Sign in to access dashboard and interventions.
         </Typography.Paragraph>
 
-        {error && <Alert type="error" message={error} style={{ marginBottom: 16 }} />}
+        {error && <Alert type="error" title={error} style={{ marginBottom: 16 }} />}
 
         <Form layout="vertical" onFinish={onFinish}>
           <Form.Item
             label="Email"
             name="email"
-            initialValue="admin@company.com"
             rules={[{ required: true, type: 'email' }]}
           >
             <Input />
@@ -56,7 +60,6 @@ export default function Login() {
           <Form.Item
             label="Password"
             name="password"
-            initialValue="Password123!"
             rules={[{ required: true }]}
           >
             <Input.Password />
