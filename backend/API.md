@@ -95,4 +95,4 @@ See `.env.example` for required configuration.
 
 ---
 
-**Last Updated:** April 25, 2026
+**Last Updated:** April 28, 2026

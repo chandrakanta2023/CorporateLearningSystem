@@ -172,7 +172,6 @@
   - [x] ✅ 🤖 Create `docs/architecture.md` - System architecture
   - [x] ✅ 🤖 Create `docs/api.md` - API documentation (placeholder)
   - [x] ✅ 🤖 Create `docs/security.md` - Security considerations
-  - [x] ✅ 🤖 Create `CHANGELOG.md` - Track version changes
 
 - [ ] 🤖 **AI: Security Documentation**
   - [x] ✅ 🤖 Document environment variables (without exposing secrets)
@@ -396,12 +395,12 @@
   - [ ] 🤖 Add foreign keys and indexes
   - [ ] 👤 Test relationships with mock inserts
 
-- [ ] **Create Migration System**
-  - [ ] 🤖 Configure TypeORM migrations
-  - [ ] 👤 Generate initial migration: `npm run migration:generate -- -n InitialSchema`
-  - [ ] 👤 Run migration: `npm run migration:run`
+- [ ] **Create Database Versioning Workflow**
+  - [ ] 🤖 Configure TypeORM schema versioning
+  - [ ] 👤 Generate initial schema version: `npm run migration:generate -- -n InitialSchema`
+  - [ ] 👤 Apply schema version: `npm run migration:run`
   - [ ] 👤 Verify tables created in PostgreSQL
-  - [ ] 🤖 📝 Document migration commands
+  - [ ] 🤖 📝 Document schema versioning commands
 
 - [ ] 🤖 **AI: Security: Database Access**
   - [ ] 🤖 Create separate DB user for app (not postgres superuser)
@@ -1296,12 +1295,6 @@
 **Goal:** Complete project-level docs  
 **Estimated Time:** 1 hour
 
-- [ ] 🤖 **AI: Create CHANGELOG**
-  - [ ] 🤖 Create `CHANGELOG.md`
-  - [ ] 🤖 Document all features added
-  - [ ] 🤖 Document all bug fixes
-  - [ ] 🤖 Use semantic versioning (1.0.0 for Phase 1 completion)
-
 - [ ] 🤖 **AI: Create LICENSE**
   - [ ] 🤖 Add appropriate license file
   - [ ] 🤖 Consider MIT License for POC
@@ -1479,7 +1472,7 @@
   - [ ] 🤖 Solution overview
   - [ ] 🤖 Architecture (Phase 1 vs Phase 2)
   - [ ] 🤖 Live demo
-  - [ ] 🤖 Next steps (migration to Phase 2)
+  - [ ] 🤖 Next steps (Phase 2 rollout path)
 
 - [ ] 👤 **Manual: Practice Demo**
   - [ ] 👤 Run through demo script 2-3 times
@@ -1583,8 +1576,8 @@
 - ⚠️ Test in different browsers before demo
 - 📊 Track your progress by checking boxes!
 
-### Phase 2 Migration Prep
-- All code should be migration-ready (95% reusable)
+### Phase 2 Readiness Prep
+- All code should be phase-2-ready (95% reusable)
 - Keep JWT auth modular (easy to swap for Keycloak)
 - Use environment variables for all config
 - Document any Phase 1 shortcuts/workarounds
@@ -1596,12 +1589,12 @@
 Once Phase 1 is complete and demo is successful:
 
 1. **Gather Feedback** - Collect stakeholder feedback, prioritize changes
-2. **Plan Phase 2 Migration** - Review migration guide in techstack.md
+2. **Plan Phase 2 Rollout** - Review the Phase 2 rollout path in docs/reference/techstack.md
 3. **Setup Docker** - Containerize backend and frontend
 4. **Deploy to Oracle Cloud** - Provision free tier resources
-5. **Implement Keycloak** - Replace JWT with enterprise SSO
+5. **Implement Keycloak** - Introduce enterprise SSO for the next delivery stage
 6. **Add Redis** - Enable high-performance caching
-7. **Real Email Service** - Replace console logs with Brevo
+7. **Real Email Service** - Introduce Brevo-based outbound email delivery
 8. **CI/CD to Cloud** - Automate cloud deployments
 
 **Estimated Phase 2 Timeline:** 2-3 weeks

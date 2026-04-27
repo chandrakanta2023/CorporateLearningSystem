@@ -1,5 +1,8 @@
 # Corporate Learning System Architecture
 
+Last Updated: April 28, 2026  
+Status: Active
+
 ## Purpose
 
 Provide a local architecture that supports learning progress tracking, risk evaluation, interventions, and compliance workflows.
@@ -48,8 +51,8 @@ PostgreSQL Database
 - Module-based backend with explicit domain boundaries
 - Validation-first request handling through DTO classes
 
-## Planned Expansion
+## Planned Delivery Roadmap
 
 - CI pipeline with automated lint/build/test gates
-- Migration from `synchronize: true` to managed database migrations
+- Move from development-time schema sync to managed database versioning
 - Stronger non-functional controls (rate limits, helmet, observability dashboards)

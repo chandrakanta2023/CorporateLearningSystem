@@ -222,9 +222,9 @@ After completing the setup:
 
 - **Database Setup:** [docs/database-setup.md](../docs/database-setup.md)
 - **Entity Definitions:** `backend/src/entities/`
-- **Backend README:** [backend/BACKEND_README.md](../backend/BACKEND_README.md)
-- **Main README:** [README.md](../README.md)
-- **TODO List:** [TODOlist.md](../TODOlist.md)
+- **Backend README:** [backend/BACKEND_README.md](../../backend/BACKEND_README.md)
+- **Main README:** [README.md](../../README.md)
+- **TODO List:** [TODOlist.md](../../TODOlist.md)
 
 ---
 

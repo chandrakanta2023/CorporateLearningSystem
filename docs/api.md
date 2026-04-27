@@ -1,5 +1,8 @@
 # API Documentation
 
+Last Updated: April 28, 2026  
+Status: Active
+
 ## Base Endpoints
 
 - Health endpoint: `GET /health`

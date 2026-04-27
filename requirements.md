@@ -739,7 +739,7 @@ The implemented system will be evaluated based on four key parameters aligned wi
 - Are data models, business rules, and reporting logic decoupled?
 - Can rules be modified without changing data structures or database schema?
 - Can reports be customized without affecting core business logic?
-- Is the system maintainable and extensible for future enhancements?
+- Is the system maintainable and extensible for future delivery needs?
 
 **Success Looks Like**:
 - ✅ Clear API boundaries between data ingestion, rule engine, and reporting layers

@@ -1,248 +1,166 @@
-# Corporate Learning System - Setup Guide
+# Corporate Learning System - Setup Runbook
 
-**Last Updated:** April 25, 2026  
-**Phase:** Phase 1 - Local POC (Without Docker)
+Last Updated: April 28, 2026  
+Status: Active  
+Scope: Greenfield implementation, Phase 1 local development (without Docker)
 
----
+## 1. Purpose
 
-## Prerequisites
+This runbook gives a deterministic setup path so a new contributor can clone the project, initialize data, run services, and validate the system end-to-end.
 
-This guide will help you set up the development environment for the Corporate Learning System Phase 1 POC.
+## 2. Baseline Requirements
 
-### System Requirements
-- **Operating System:** Windows 10/11, macOS 10.15+, or Linux
-- **RAM:** Minimum 8GB (16GB recommended)
-- **Disk Space:** 5GB free space
+- Operating system: Windows 10/11, macOS, or Linux
+- Node.js: 20+
+- npm: 10+
+- PostgreSQL: 15+
+- Git: any current stable version
+- VS Code: current stable version (recommended)
 
----
+Current project environment observed in this repository context:
 
-## 1. Node.js Installation
+- Node.js v24.x
+- npm v11.x
+- PostgreSQL 16.x
 
-### Installed Version
-- **Node.js Version:** [To be documented after installation]
-- **npm Version:** [To be documented after installation]
-- **Installation Date:** [To be documented after installation]
+## 3. Repository Bootstrap
 
-### Installation Steps (Windows)
-1. Visit https://nodejs.org
-2. Download **Node.js 20 LTS** (Long Term Support)
-3. Run the Windows installer (`.msi` file)
-4. Follow the installation wizard:
-   - Accept the license agreement
-   - Choose default installation path
-   - Select "Automatically install necessary tools" option
-5. Restart your terminal/command prompt
+From the repository root, run one of the following approaches.
 
-### Verification
-After installation, open a new terminal and run:
-```bash
-node --version
-# Expected output: v20.x.x
+### 3.1 Guided Setup (Preferred)
 
-npm --version
-# Expected output: 10.x.x
+Windows PowerShell:
+
+```powershell
+.\setup-any-machine.ps1
 ```
 
-### Troubleshooting
-- If commands are not recognized, restart your computer
-- Ensure Node.js is added to your system PATH
-- Run as Administrator if you encounter permission issues
-
----
-
-## 2. PostgreSQL Installation
-
-### Installed Version
-- **PostgreSQL Version:** [To be documented after installation]
-- **Port:** 5432 (default)
-- **Installation Date:** [To be documented after installation]
-
-### Installation Steps (Windows)
-1. Visit https://www.postgresql.org/download/windows/
-2. Download **PostgreSQL 15** installer
-3. Run the installer
-4. Configuration during installation:
-   - **Superuser Password:** Set to `postgres` (for development only)
-   - **Port:** Keep default `5432`
-   - **Locale:** Use default locale
-5. Install pgAdmin (included in installer) for database management
-
-### Verification
-After installation, open Command Prompt and run:
-```bash
-psql --version
-# Expected output: psql (PostgreSQL) 15.x
-```
-
-### Post-Installation Setup
-1. Add PostgreSQL bin folder to PATH (if not automatic):
-   - Default: `C:\Program Files\PostgreSQL\15\bin`
-2. Test connection:
-   ```bash
-   psql -U postgres
-   # Enter password: postgres
-   # If successful, you'll see: postgres=#
-   # Exit with: \q
-   ```
-
-### Troubleshooting
-- If `psql` command not found, manually add to PATH
-- Use pgAdmin GUI if command-line access fails
-- Ensure PostgreSQL service is running (Services.msc on Windows)
-
----
-
-## 3. Git Installation
-
-### Installed Version
-- **Git Version:** [To be documented after installation]
-- **Installation Date:** [To be documented after installation]
-
-### Installation Steps (Windows)
-1. Visit https://git-scm.com
-2. Download **Git for Windows**
-3. Run the installer
-4. Recommended settings:
-   - Default editor: Choose your preference (VS Code recommended)
-   - PATH environment: "Git from the command line and also from 3rd-party software"
-   - Line ending conversions: "Checkout Windows-style, commit Unix-style"
-
-### Configuration
-After installation, configure your identity:
-```bash
-git config --global user.name "Your Name"
-git config --global user.email "your.email@example.com"
-
-# Verify configuration
-git config --list
-```
-
-### Verification
-```bash
-git --version
-# Expected output: git version 2.x.x
-```
-
----
-
-## 4. VS Code Installation
-
-### Installed Version
-- **VS Code Version:** [To be documented after installation]
-- **Installation Date:** [To be documented after installation]
-
-### Installation Steps (Windows)
-1. Visit https://code.visualstudio.com
-2. Download **VS Code** for Windows
-3. Run the installer
-4. Recommended options:
-   - ✅ Add "Open with Code" action to context menu
-   - ✅ Add to PATH
-   - ✅ Register Code as editor for supported file types
-
-### Required Extensions
-After installing VS Code, install these extensions:
-
-1. **ESLint** (`dbaeumer.vscode-eslint`)
-   - JavaScript/TypeScript linting
-
-2. **Prettier - Code formatter** (`esbenp.prettier-vscode`)
-   - Code formatting
-
-3. **TypeScript Vue Plugin (Volar)** or **ES7+ React snippets**
-   - React development support
-
-4. **PostgreSQL** (`ckolkman.vscode-postgres`)
-   - Database management in VS Code
-
-5. **GitLens** (`eamodio.gitlens`) - Optional but recommended
-   - Enhanced Git integration
-
-### Installing Extensions
-Method 1 - Via VS Code UI:
-- Open VS Code
-- Click Extensions icon (Ctrl+Shift+X)
-- Search for each extension name
-- Click "Install"
-
-Method 2 - Via Command Line:
-```bash
-code --install-extension dbaeumer.vscode-eslint
-code --install-extension esbenp.prettier-vscode
-code --install-extension ckolkman.vscode-postgres
-```
-
----
-
-## 5. Setup Verification Checklist
-
-Run all these commands to verify your setup:
+macOS/Linux:
 
 ```bash
-# Node.js & npm
-node --version
-npm --version
-
-# PostgreSQL
-psql --version
-
-# Git
-git --version
-
-# VS Code (should open VS Code)
-code --version
+chmod +x ./setup-any-machine.sh
+./setup-any-machine.sh
 ```
 
-**Expected Results:**
-- ✅ All commands execute without errors
-- ✅ Version numbers display correctly
-- ✅ VS Code opens when running `code`
+What this does:
 
----
+- installs backend and frontend dependencies
+- creates backend environment file from template if missing
+- initializes schema and demo data using the backend seed flow
 
-## Next Steps
+### 3.2 Manual Setup
 
-After completing this setup:
+Backend:
 
-1. ✅ **Document your installed versions** above
-2. 📝 Proceed to **Milestone 1.2: Backend "Hello World"**
-3. 🚀 Start building the NestJS backend
+```powershell
+cd backend
+npm install
+Copy-Item .env.example .env
+npm run seed
+npm run start:dev
+```
 
----
+Frontend (new terminal):
 
-## Troubleshooting Common Issues
+```powershell
+cd frontend
+npm install
+npm run dev
+```
 
-### Node.js or npm not found
-- Restart terminal
-- Restart computer
-- Manually add to PATH: `C:\Program Files\nodejs\`
+## 4. Environment Configuration
 
-### PostgreSQL connection refused
-- Check service is running: `services.msc`
-- Look for "postgresql-x64-15"
-- Start the service if stopped
+The backend uses backend/.env. If backend/.env does not exist, create it from backend/.env.example.
 
-### Git bash vs Command Prompt
-- Both work fine
-- Git Bash provides Unix-like environment
-- PowerShell recommended for Windows
+Minimum fields to verify:
 
-### VS Code extensions not installing
-- Check internet connection
-- Reload VS Code window (Ctrl+Shift+P → "Reload Window")
-- Install manually from VS Code Marketplace website
+- DB_HOST
+- DB_PORT
+- DB_USERNAME
+- DB_PASSWORD
+- DB_NAME
+- JWT_SECRET
+- CORS_ORIGIN
 
----
+If PostgreSQL credentials differ from defaults, update DB_PASSWORD and related DB fields before starting the backend.
 
-## Additional Resources
+## 5. Data Initialization Paths
 
-- **Node.js Documentation:** https://nodejs.org/docs
-- **PostgreSQL Documentation:** https://www.postgresql.org/docs/15/
-- **Git Documentation:** https://git-scm.com/doc
-- **VS Code Documentation:** https://code.visualstudio.com/docs
+Use one path only:
 
----
+1. Seed path (recommended for fresh setups):
+   - npm run seed
+2. SQLJS import path (only for prototype data import use cases):
+   - configure DB_TYPE=postgres and DB_SQLJS_PATH
+   - run npm run db:migrate:sqljs-to-postgres
 
-**Setup Status:** ❌ Not Started
+## 6. Service Startup and Health Checks
 
-Update this document as you complete each installation step.
+Expected local endpoints:
+
+- Backend health endpoint: http://localhost:3000/health
+- Frontend dev server: http://localhost:5173
+
+Quick backend health check:
+
+```powershell
+Invoke-RestMethod -Uri http://localhost:3000/health
+```
+
+## 7. Pre-Development Validation Gate
+
+Run these checks before feature work.
+
+Backend:
+
+```powershell
+cd backend
+npm run lint
+npm test -- --runInBand
+npm run build
+npm run test:e2e
+```
+
+Frontend:
+
+```powershell
+cd frontend
+npm run lint
+npm run build
+```
+
+## 8. Troubleshooting
+
+### 8.1 Node or npm Not Found
+
+- Restart terminal session
+- Verify PATH includes Node.js install location
+- Re-run node --version and npm --version
+
+### 8.2 PostgreSQL Connection Errors
+
+- Verify PostgreSQL service is running
+- Verify backend/.env database credentials
+- Verify the target database exists
+- Re-run seed command after credential correction
+
+### 8.3 Frontend Cannot Reach Backend
+
+- Ensure backend is running on expected port
+- Verify CORS_ORIGIN in backend/.env includes frontend origin
+- Verify frontend is using the expected API base URL
+
+### 8.4 Port Already In Use
+
+- Stop conflicting process or change port locally for the active session
+- Re-run service startup commands
+
+## 9. Onboarding Sequence After Setup
+
+After setup succeeds, continue in this order:
+
+1. docs/START_HERE.md
+2. requirements.md
+3. docs/architecture.md
+4. docs/requirement-traceability-matrix.md
+5. TODOlist.md

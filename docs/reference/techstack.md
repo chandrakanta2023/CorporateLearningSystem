@@ -1,7 +1,7 @@
 # Technology Stack - Corporate Learning System
 
 **Project:** Corporate Learning Progress, Intervention & Compliance Tracking System  
-**Last Updated:** April 25, 2026  
+**Last Updated:** April 28, 2026  
 **Deployment Strategy:** Two-Phase Approach
 
 ---
@@ -11,7 +11,7 @@
 2. [Phase 1: Local POC (Without Docker)](#phase-1-local-poc-without-docker)
 3. [Phase 2: Production Ready (With Docker)](#phase-2-production-ready-with-docker)
 4. [Phase Comparison](#phase-comparison)
-5. [Migration Guide](#migration-guide)
+5. [Phase 2 Rollout Path](#phase-2-rollout-path)
 
 ---
 
@@ -23,6 +23,8 @@ This document outlines a **two-phase implementation strategy** for the Corporate
 - **Phase 2 (Production):** Full production-ready deployment with Docker, cloud hosting, and enterprise features
 
 Both phases maintain **$0 monthly cost** using open-source technologies and free-tier cloud services.
+
+Terminology note: references to Phase 1 to Phase 2 movement indicate planned rollout progression of this greenfield implementation, not legacy-system upgrade work.
 
 ---
 
@@ -1196,13 +1198,13 @@ docker-compose logs -f
 
 ---
 
-# Migration Guide
+# Phase 2 Rollout Path
 
-## Phase 1 → Phase 2 Migration
+## Phase 1 to Phase 2 Rollout
 
-**Good News:** Your Phase 1 code migrates to Phase 2 with minimal changes! The application logic remains 95% identical.
+**Guidance:** Phase 1 implementation artifacts carry forward into Phase 2 with minimal rework. The application logic remains 95% identical.
 
-### **Migration Timeline**
+### **Rollout Timeline**
 - **Preparation:** 4-8 hours
 - **Docker Setup:** 2-3 hours
 - **Keycloak Configuration:** 2-3 hours
@@ -1211,7 +1213,7 @@ docker-compose logs -f
 
 ---
 
-### **Step-by-Step Migration**
+### **Step-by-Step Rollout**
 
 #### **1. Code Changes (Backend)**
 
@@ -2333,7 +2335,7 @@ Week 8: Production testing & go-live
 2. **100% Open Source Core** - All critical components are open-source
 3. **No Credit Cards for Phase 1** - Perfect for POC without any signups
 4. **Enterprise-Ready Phase 2** - SSO, caching, real emails, CI/CD
-5. **Easy Migration** - 95% code reusability between phases
+5. **Straightforward Phase 2 Rollout** - 95% code reusability between phases
 6. **Scalable** - Supports 50K+ employees on free tier
 7. **Production-Grade** - Docker, Nginx, Keycloak, Redis
 8. **Compliance-Friendly** - All permissive licenses (MIT, Apache 2.0, BSD)
@@ -2342,7 +2344,7 @@ Week 8: Production testing & go-live
 
 **Document Version:** 2.0  
 **Created:** April 25, 2026  
-**Updated:** April 25, 2026 (Two-Phase Restructure)  
+**Updated:** April 28, 2026 (Terminology aligned to greenfield rollout narrative)  
 **Authors:** Solution Architecture Team  
 **Next Review:** Post Phase 1 POC Completion
 
@@ -2453,20 +2455,20 @@ corporate-learning-system/
 | **Learning NestJS/React** | ⭐ **Without Docker** | Simple debugging, clear mental model |
 | **Full Feature Set** | ⭐⭐⭐ **With Docker** | Redis, Keycloak, email testing included |
 
-### **Migration Path:**
+### **Phase 2 Rollout Path:**
 ```
 Start: Without Docker (POC) 
-  ↓ (2-3 days to migrate)
+  ↓ (2-3 days for phase 2 rollout)
 Intermediate: With Docker (Local)
   ↓ (1 day to deploy)
 Production: With Docker (Oracle Cloud)
 ```
 
-You can start with **Without Docker** and migrate to Docker later when needed. The application code remains identical.
+You can start with **Without Docker** and introduce Docker in the next delivery stage when needed. The application code remains aligned.
 
 ---
 
 **Document Version:** 2.0  
 **Created:** April 25, 2026  
-**Updated:** April 25, 2026 (Added Without Docker option)  
+**Updated:** April 28, 2026 (Terminology aligned to greenfield rollout narrative)  
 **Next Review:** Post Phase 1 Deployment

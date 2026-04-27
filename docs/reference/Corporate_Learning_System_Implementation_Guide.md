@@ -2,7 +2,15 @@
 ## Detailed Implementation Guideline
 
 ### Document Version: 1.0
-### Date: February 4, 2026
+### Date: April 28, 2026
+
+### Scope Note
+This document preserves the original problem-statement domain language for completeness.
+Within this repository's corporate learning implementation context, use the following mapping while reading this guide:
+
+- student -> employee/learner
+- teacher/counselor -> trainer/manager/HR stakeholder
+- school/education board -> corporate learning and compliance governance context
 
 ---
 

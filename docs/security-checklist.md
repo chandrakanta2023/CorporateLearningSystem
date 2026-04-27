@@ -1,5 +1,8 @@
 # Security Checklist
 
+Last Updated: April 28, 2026  
+Status: Active
+
 ## Development Checklist
 
 - [ ] `.env` exists locally and is not committed

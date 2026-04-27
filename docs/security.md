@@ -1,5 +1,8 @@
 # Security Notes
 
+Last Updated: April 28, 2026  
+Status: Active
+
 ## Current Controls
 
 - Backend CORS configured for local frontend dev/preview origins with env override support

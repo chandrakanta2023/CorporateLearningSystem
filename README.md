@@ -2,6 +2,10 @@
 
 Progress, Intervention and Compliance Tracking System.
 
+## Start Here
+
+For a step-by-step onboarding path, begin with docs/START_HERE.md.
+
 ## Overview
 
 This repository contains a local, non-Docker Phase 1 proof-of-concept implementation based on the project requirements:
@@ -73,11 +77,11 @@ This will:
 - create backend `.env` from template (if missing)
 - run the canonical backend seed flow (`npm run seed`) to initialize schema and demo data
 
-## Data Migration To New DB
+## Database Initialization
 
 Primary setup on new machines uses the canonical seed flow (`backend/src/seed.ts`) for schema + demo data initialization.
 
-If you still have old local `sqljs` data and want to migrate to PostgreSQL:
+If you have local prototype `sqljs` data and want to import it into PostgreSQL:
 
 1. Ensure `backend/.env` points to PostgreSQL (`DB_TYPE=postgres`)
 2. Keep `DB_SQLJS_PATH` set to source file path (default `.data/dev.sqlite`)
@@ -88,7 +92,7 @@ cd backend
 npm run db:migrate:sqljs-to-postgres
 ```
 
-After migration, start backend/frontend normally.
+After the import completes, start backend/frontend normally.
 
 ## Project Structure
 
@@ -112,14 +116,28 @@ Implemented foundation includes:
 
 ## Documentation Index
 
+Primary onboarding:
+
+- Start here: docs/START_HERE.md
+- Docs governance index: docs/README.md
+
 - Setup guide: `docs/setup.md`
 - Database setup: `docs/database-setup.md`
 - Architecture: `docs/architecture.md`
 - API overview: `docs/api.md`
 - Security notes: `docs/security.md`
 - Security checklist: `docs/security-checklist.md`
+- Reference docs: `docs/reference/`
+- Archived planning docs: `docs/archive/`
 - Backend docs: `backend/README.md`, `backend/API.md`, `backend/DEPLOYMENT.md`
 - Frontend docs: `frontend/README.md`, `frontend/STRUCTURE.md`, `frontend/DEPLOYMENT.md`
+
+## Documentation Governance
+
+- docs/START_HERE.md is the primary onboarding path.
+- requirements.md is the business baseline.
+- docs/requirement-traceability-matrix.md tracks requirement-to-implementation coverage.
+- docs/archive/NEXT_STEPS.md is archival context only and should not be used as the primary current-state source.
 
 ## Next Scope
 

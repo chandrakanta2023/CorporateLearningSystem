@@ -1,3 +1,18 @@
+# Archived Planning Snapshot
+
+This file is retained as historical planning context from an early implementation stage.
+
+Use these documents for current onboarding and execution:
+
+1. README.md
+2. docs/START_HERE.md
+3. docs/requirement-traceability-matrix.md
+4. TODOlist.md
+
+---
+
+# Historical Content (Archived)
+
 # Current State Summary - Quick Reference
 
 ## 🎯 Where We Are
@@ -168,6 +183,6 @@ E) **Something else** (please specify)
 
 **Files to Reference:**
 - Full Analysis: [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)
-- Setup Guide: [POSTGRESQL_SETUP_SUMMARY.md](POSTGRESQL_SETUP_SUMMARY.md)
-- Project Overview: [README.md](README.md)
-- Task List: [TODOlist.md](TODOlist.md)
+- Setup Guide: [POSTGRESQL_SETUP_SUMMARY.md](../reference/POSTGRESQL_SETUP_SUMMARY.md)
+- Project Overview: [README.md](../../README.md)
+- Task List: [TODOlist.md](../../TODOlist.md)

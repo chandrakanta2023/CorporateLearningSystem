@@ -101,7 +101,7 @@ Key environment variables (see `.env.example` for complete list):
 | `DB_USERNAME` | Database username | postgres |
 | `DB_PASSWORD` | Database password | postgres |
 | `DB_NAME` | Database name | corporate_learning_db |
-| `JWT_SECRET` | JWT secret key | (change in production!) |
+| `JWT_SECRET` | JWT secret key | (set a unique production value) |
 | `CORS_ORIGIN` | Allowed CORS origin | http://localhost:5173 |
 
 ## Features
@@ -118,11 +118,11 @@ Key environment variables (see `.env.example` for complete list):
 - 🔄 Progress tracking (In Progress)
 - 🔄 Compliance reporting (In Progress)
 
-### Phase 2 (Future)
+### Phase 2 (Roadmap)
 - Docker containerization
 - Redis caching
 - Keycloak authentication
-- Enhanced security features
+- Enterprise security features
 - Production optimizations
 
 ## Development
@@ -182,7 +182,7 @@ npm install
 
 🔒 **Important:**
 - Never commit `.env` file to Git
-- Change `JWT_SECRET` in production
+- Set a unique `JWT_SECRET` in production
 - Use strong database passwords
 - Keep dependencies updated
 
@@ -192,6 +192,6 @@ UNLICENSED - Internal Corporate Use Only
 
 ---
 
-**Last Updated:** April 25, 2026  
+**Last Updated:** April 28, 2026  
 **Version:** 1.0.0  
-** Phase:** Phase 1 - Local POC
+**Phase:** Phase 1 - Local POC

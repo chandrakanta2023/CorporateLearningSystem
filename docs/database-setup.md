@@ -1,5 +1,8 @@
 # Database Configuration Instructions
 
+Last Updated: April 28, 2026  
+Status: Active
+
 ## Step 1: Run Database Setup Script
 
 Execute the following command to create the database:
@@ -26,7 +29,7 @@ DB_PASSWORD=your_actual_postgres_password
 The backend will automatically:
 - Connect to PostgreSQL
 - Create all required tables (Users, Courses, Enrollments, Interventions)
-- Run database migrations
+- Initialize the database schema
 
 ```powershell
 cd backend
@@ -51,18 +54,10 @@ The system will create the following tables:
 ### Courses Table
 - `id` (UUID, Primary Key)
 - `title`, `description`
-- `type` (mandatory, optional, certification)
-- `durationHours`
-- `deadline`
 - `department`
 - `isActive`
-- Timestamps
-
 ### Enrollments Table
 - `id` (UUID, Primary Key)
-- `userId`, `courseId` (Foreign Keys)
-- `status` (not_started, in_progress, completed, failed)
-- `progressPercentage`
 - `startedAt`, `completedAt`, `dueDate`
 - `remindersSent`, `lastReminderSentAt`
 - Timestamps
@@ -84,7 +79,6 @@ Check the health endpoint to verify database connection:
 Invoke-RestMethod -Uri http://localhost:3000/health
 ```
 
-Expected response:
 ```json
 {
   "status": "ok",
@@ -110,7 +104,7 @@ Expected response:
 ### Tables Not Created
 - Check `NODE_ENV=development` in `.env`
 - Verify `synchronize: true` in TypeORM config (development only)
-- Check backend console for migration errors
+- Check backend console for schema initialization errors
 
 ## Manual Database Access
 
@@ -130,7 +124,3 @@ Check users table:
 ```sql
 SELECT * FROM users;
 ```
-
----
-
-Last Updated: April 25, 2026
