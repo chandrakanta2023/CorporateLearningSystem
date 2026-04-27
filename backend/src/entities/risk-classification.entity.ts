@@ -18,7 +18,7 @@ export class RiskClassification {
   @Column()
   userId: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   ruleId: string | null;
 
   @Column({

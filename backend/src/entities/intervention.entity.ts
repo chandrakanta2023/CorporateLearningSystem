@@ -45,10 +45,10 @@ export class Intervention {
   @Column('text')
   message: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   recipientEmail: string | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   assignedBy: string | null;
 
   @Column({ type: 'timestamp', nullable: true })
@@ -57,13 +57,13 @@ export class Intervention {
   @Column({ type: 'integer', default: 0 })
   progress: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   sentAt: Date | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   completedAt: Date | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   errorMessage: string | null;
 
   @Column({ type: 'text', nullable: true })
