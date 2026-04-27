@@ -1,12 +1,14 @@
+import { useEffect, useState } from 'react';
 import { Card, Row, Col, Table, Tag, Button, Space } from 'antd';
 import MainLayout from '../components/Layout/MainLayout';
+import { rulesApi } from '../services/api';
 import './RiskRules.css';
 
 interface RiskRule {
   id: string;
   name: string;
   description: string;
-  severity: 'high' | 'medium' | 'low';
+  severity: 'critical' | 'high' | 'medium' | 'low';
   active: boolean;
   triggersCount: number;
 }
@@ -55,6 +57,32 @@ const mockRiskRules: RiskRule[] = [
 ];
 
 export default function RiskRules() {
+  const [rules, setRules] = useState<RiskRule[]>(mockRiskRules);
+
+  useEffect(() => {
+    const loadRules = async () => {
+      try {
+        const response = await rulesApi.list();
+        if (response.length > 0) {
+          setRules(
+            response.map((rule) => ({
+              id: rule.id,
+              name: rule.name,
+              description: rule.description,
+              severity: rule.severity,
+              active: rule.isActive,
+              triggersCount: 0,
+            })),
+          );
+        }
+      } catch (error) {
+        console.error('Failed to load rules, using fallback data', error);
+      }
+    };
+
+    loadRules();
+  }, []);
+
   const columns = [
     {
       title: 'Rule Name',
@@ -74,7 +102,8 @@ export default function RiskRules() {
       key: 'severity',
       width: '15%',
       render: (severity: string) => {
-        const color = severity === 'high' ? 'red' : severity === 'medium' ? 'orange' : 'green';
+        const color =
+          severity === 'critical' ? 'magenta' : severity === 'high' ? 'red' : severity === 'medium' ? 'orange' : 'green';
         return <Tag color={color}>{severity.toUpperCase()}</Tag>;
       },
     },
@@ -114,7 +143,7 @@ export default function RiskRules() {
           <Col xs={24} sm={12} md={6}>
             <Card className="stat-card">
               <div className="stat-number" style={{ color: '#2c9c69' }}>
-                {mockRiskRules.filter((r) => r.active).length}
+                {rules.filter((r) => r.active).length}
               </div>
               <div className="stat-label">Active</div>
             </Card>
@@ -122,7 +151,7 @@ export default function RiskRules() {
           <Col xs={24} sm={12} md={6}>
             <Card className="stat-card">
               <div className="stat-number" style={{ color: '#ff7875' }}>
-                {mockRiskRules.reduce((sum, r) => sum + r.triggersCount, 0)}
+                {rules.reduce((sum, r) => sum + r.triggersCount, 0)}
               </div>
               <div className="stat-label">Total Triggers</div>
             </Card>
@@ -130,7 +159,7 @@ export default function RiskRules() {
           <Col xs={24} sm={12} md={6}>
             <Card className="stat-card">
               <div className="stat-number" style={{ color: '#faad14' }}>
-                5
+                {rules.filter((r) => r.severity === 'high' || r.severity === 'critical').length}
               </div>
               <div className="stat-label">High Severity</div>
             </Card>
@@ -143,7 +172,7 @@ export default function RiskRules() {
           </Space>
           <Table
             columns={columns}
-            dataSource={mockRiskRules}
+            dataSource={rules}
             rowKey="id"
             pagination={{ pageSize: 10 }}
             scroll={{ x: 600 }}

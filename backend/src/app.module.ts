@@ -4,7 +4,25 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HealthModule } from './health/health.module';
-import { User, Course, Enrollment, Intervention } from './entities';
+import {
+  User,
+  Course,
+  Enrollment,
+  Intervention,
+  AttendanceRecord,
+  AssessmentRecord,
+  CompetencyMilestone,
+  RiskRule,
+  RiskClassification,
+  ComplianceReport,
+} from './entities';
+import { IngestionModule } from './ingestion/ingestion.module';
+import { ProfilesModule } from './profiles/profiles.module';
+import { RulesModule } from './rules/rules.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { RiskEvaluationsModule } from './risk-evaluations/risk-evaluations.module';
+import { InterventionsModule } from './interventions/interventions.module';
+import { ComplianceModule } from './compliance/compliance.module';
 
 @Module({
   imports: [
@@ -19,11 +37,29 @@ import { User, Course, Enrollment, Intervention } from './entities';
       username: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_NAME || 'corporate_learning_db',
-      entities: [User, Course, Enrollment, Intervention],
+      entities: [
+        User,
+        Course,
+        Enrollment,
+        Intervention,
+        AttendanceRecord,
+        AssessmentRecord,
+        CompetencyMilestone,
+        RiskRule,
+        RiskClassification,
+        ComplianceReport,
+      ],
       synchronize: process.env.NODE_ENV === 'development', // Only in development!
       logging: process.env.NODE_ENV === 'development',
     }),
     HealthModule,
+    IngestionModule,
+    ProfilesModule,
+    RulesModule,
+    DashboardModule,
+    RiskEvaluationsModule,
+    InterventionsModule,
+    ComplianceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

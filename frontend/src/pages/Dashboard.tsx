@@ -5,6 +5,7 @@ import SummaryCard from '../components/Dashboard/SummaryCard';
 import ProgressChart from '../components/Dashboard/ProgressChart';
 import AtRiskTable from '../components/Dashboard/AtRiskTable';
 import InterventionsList from '../components/Dashboard/InterventionsList';
+import { dashboardApi } from '../services/api';
 import { mockData } from '../services/mockData';
 import './Dashboard.css';
 
@@ -50,15 +51,23 @@ export default function Dashboard() {
     const loadDashboardData = async () => {
       try {
         setLoading(true);
-        // Simulate API call with 500ms delay
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
+        const response = await dashboardApi.summary();
+        setMetrics(response.metrics);
+        setProgressData(response.progressData);
+        setAtRiskEmployees(response.atRiskEmployees);
+        setRecentInterventions(
+          response.recentInterventions.map((item) => ({
+            ...item,
+            status: item.status === 'cancelled' || item.status === 'failed' ? 'pending' : item.status,
+          })),
+        );
+      } catch (error) {
+        console.error('Failed to load dashboard data:', error);
+        // Fallback to local mock data so UI remains usable if backend is unavailable.
         setMetrics(mockData.getDashboardMetrics());
         setProgressData(mockData.getProgressData());
         setAtRiskEmployees(mockData.getAtRiskEmployees());
         setRecentInterventions(mockData.getRecentInterventions());
-      } catch (error) {
-        console.error('Failed to load dashboard data:', error);
       } finally {
         setLoading(false);
       }

@@ -6,7 +6,8 @@ import {
   CheckCircleOutlined,
   BarChartOutlined,
 } from '@ant-design/icons';
-import { useState } from 'react';
+import { useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface SideMenuProps {
   collapsed?: boolean;
@@ -15,7 +16,8 @@ interface SideMenuProps {
 type MenuItem = Required<MenuProps>['items'][number];
 
 function SideMenu(_props: SideMenuProps) {
-  const [selectedKey, setSelectedKey] = useState('dashboard');
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const items: MenuItem[] = [
     {
@@ -50,9 +52,25 @@ function SideMenu(_props: SideMenuProps) {
     },
   ];
 
+  const selectedKey = useMemo(() => {
+    const pathname = location.pathname;
+    if (pathname.startsWith('/risk-rules')) {
+      return 'risk-rules';
+    }
+    if (pathname.startsWith('/interventions')) {
+      return 'interventions';
+    }
+    if (pathname.startsWith('/compliance')) {
+      return 'compliance';
+    }
+    if (pathname.startsWith('/reports')) {
+      return 'reports';
+    }
+    return 'dashboard';
+  }, [location.pathname]);
+
   const handleMenuClick: MenuProps['onClick'] = (e) => {
-    setSelectedKey(e.key);
-    // Future: navigate to page based on e.key
+    navigate(`/${e.key}`);
   };
 
   return (

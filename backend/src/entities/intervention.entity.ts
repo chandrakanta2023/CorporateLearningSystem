@@ -8,7 +8,9 @@ export enum InterventionType {
 
 export enum InterventionStatus {
   PENDING = 'pending',
-  SENT = 'sent',
+  ACTIVE = 'active',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled',
   FAILED = 'failed',
 }
 
@@ -44,13 +46,34 @@ export class Intervention {
   message: string;
 
   @Column({ nullable: true })
-  recipientEmail: string;
+  recipientEmail: string | null;
 
   @Column({ nullable: true })
-  sentAt: Date;
+  assignedBy: string | null;
+
+  @Column({ type: 'timestamp', nullable: true })
+  dueDate: Date | null;
+
+  @Column({ type: 'integer', default: 0 })
+  progress: number;
 
   @Column({ nullable: true })
-  errorMessage: string;
+  sentAt: Date | null;
+
+  @Column({ nullable: true })
+  completedAt: Date | null;
+
+  @Column({ nullable: true })
+  errorMessage: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  outcomeNotes: string | null;
+
+  @Column({ type: 'numeric', precision: 10, scale: 2, nullable: true })
+  preInterventionScore: number | null;
+
+  @Column({ type: 'numeric', precision: 10, scale: 2, nullable: true })
+  postInterventionScore: number | null;
 
   @CreateDateColumn()
   createdAt: Date;
