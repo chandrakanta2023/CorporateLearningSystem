@@ -5,8 +5,10 @@ import {
   BellOutlined,
   CheckCircleOutlined,
   BarChartOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface SideMenuProps {
   collapsed?: boolean;
@@ -15,7 +17,13 @@ interface SideMenuProps {
 type MenuItem = Required<MenuProps>['items'][number];
 
 function SideMenu(_props: SideMenuProps) {
-  const [selectedKey, setSelectedKey] = useState('dashboard');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [selectedKey, setSelectedKey] = useState(
+    location.pathname === '/'
+      ? 'dashboard'
+      : location.pathname.replace('/', ''),
+  );
 
   const items: MenuItem[] = [
     {
@@ -48,11 +56,21 @@ function SideMenu(_props: SideMenuProps) {
       label: 'Reports',
       title: 'Reports',
     },
+    {
+      key: 'profile',
+      icon: <UserOutlined />,
+      label: 'Profile',
+      title: 'Profile',
+    },
   ];
 
   const handleMenuClick: MenuProps['onClick'] = (e) => {
     setSelectedKey(e.key);
-    // Future: navigate to page based on e.key
+    if (e.key === 'dashboard') {
+      navigate('/');
+      return;
+    }
+    navigate(`/${e.key}`);
   };
 
   return (

@@ -6,6 +6,7 @@ import ProgressChart from '../components/Dashboard/ProgressChart';
 import AtRiskTable from '../components/Dashboard/AtRiskTable';
 import InterventionsList from '../components/Dashboard/InterventionsList';
 import { mockData } from '../services/mockData';
+import { dashboardApi } from '../services/api';
 import './Dashboard.css';
 
 interface DashboardMetrics {
@@ -53,7 +54,8 @@ export default function Dashboard() {
         // Simulate API call with 500ms delay
         await new Promise((resolve) => setTimeout(resolve, 500));
 
-        setMetrics(mockData.getDashboardMetrics());
+        const apiMetrics = await dashboardApi.metrics().catch(() => null);
+        setMetrics(apiMetrics || mockData.getDashboardMetrics());
         setProgressData(mockData.getProgressData());
         setAtRiskEmployees(mockData.getAtRiskEmployees());
         setRecentInterventions(mockData.getRecentInterventions());

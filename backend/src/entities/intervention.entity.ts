@@ -27,14 +27,14 @@ export class Intervention {
   courseId: string;
 
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: InterventionType,
     default: InterventionType.REMINDER,
   })
   type: InterventionType;
 
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: InterventionStatus,
     default: InterventionStatus.PENDING,
   })

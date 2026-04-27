@@ -21,7 +21,7 @@ export class Enrollment {
   courseId: string;
 
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: EnrollmentStatus,
     default: EnrollmentStatus.NOT_STARTED,
   })
