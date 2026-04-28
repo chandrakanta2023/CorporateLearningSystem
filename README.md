@@ -2,9 +2,36 @@
 
 Progress, Intervention and Compliance Tracking System.
 
-## Start Here
+## Getting Started
 
-For a step-by-step onboarding path, begin with docs/START_HERE.md.
+Use one of these paths when opening the repository for the first time.
+
+### Run The Application
+
+For the fastest local startup on Windows:
+
+```powershell
+.\run-demo.bat
+```
+
+This starts the frontend, backend, and database using Docker.
+
+After startup:
+
+- Frontend: `http://localhost:8080`
+- Backend health: `http://localhost:3000/health`
+- API docs: `http://localhost:3000/api/docs`
+- Demo login: `admin@company.com` / `Admin@1234`
+
+Prerequisite: Docker Desktop must be installed and running.
+
+### Read The Project
+
+If you want the standard onboarding path, read these in order:
+
+1. `README.md`
+2. `docs/START_HERE.md`
+3. `docs/demo-deployment-runbook.md`
 
 ## Overview
 
@@ -13,6 +40,30 @@ This repository contains a local, non-Docker Phase 1 proof-of-concept implementa
 - Backend: NestJS + TypeScript + PostgreSQL (TypeORM)
 - Frontend: React + TypeScript + Vite
 - Goal: establish a working foundation with backend/frontend connectivity, health checks, and initial project documentation
+
+## Demo Deployment
+
+Best delivery mode for a shared demo:
+
+1. Publish a hosted demo URL
+2. Keep the local Docker fallback in this repo as backup
+
+For the local one-click fallback on Windows:
+
+```powershell
+.\run-demo.ps1
+```
+
+This starts PostgreSQL, the backend API, and the frontend in containers.
+
+- Frontend: `http://localhost:8080`
+- Backend health: `http://localhost:3000/health`
+- API docs: `http://localhost:3000/api/docs`
+- Demo login: `admin@company.com` / `Admin@1234`
+
+Full handoff guidance: `docs/demo-deployment-runbook.md`
+
+If Docker Desktop is not running, start Docker Desktop first and then run `run-demo.bat` or `run-demo.ps1`.
 
 ## Prerequisites
 
@@ -89,6 +140,22 @@ This will:
 - install backend/frontend dependencies
 - create backend `.env` from template (if missing)
 - run the canonical backend seed flow (`npm run seed`) to initialize schema and demo data
+
+## One-Click Local Demo
+
+If you want others to run the application with minimal setup, use the Docker-based fallback instead of manual Node/PostgreSQL installation.
+
+Windows:
+
+```powershell
+.\run-demo.ps1
+```
+
+Stop it with:
+
+```powershell
+.\stop-demo.ps1
+```
 
 ## Database Initialization
 

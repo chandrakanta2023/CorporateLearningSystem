@@ -19,6 +19,17 @@ Follow this sequence:
 
 ## 2. Environment Setup
 
+For demo delivery, prefer either:
+
+1. A hosted URL
+2. The Docker fallback in `docs/demo-deployment-runbook.md`
+
+Windows one-click local demo:
+
+```powershell
+.\run-demo.ps1
+```
+
 From repository root:
 
 Windows PowerShell (guided setup):

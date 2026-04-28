@@ -77,7 +77,7 @@ Exit Criteria:
 4. Produce performance, reliability, and security evidence artifacts.
 
 Exit Criteria:
-- Judge-ready evidence pack assembled for scoring sheet.
+- Review-ready evidence pack assembled for release and technical assessment.
 
 ## 6. KPI and Evidence Targets
 

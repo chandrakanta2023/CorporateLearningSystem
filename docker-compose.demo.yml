@@ -1,0 +1,66 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: cls-postgres
+    environment:
+      POSTGRES_DB: corporate_learning_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - cls_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d corporate_learning_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cls-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: corporate_learning_db
+      JWT_SECRET: demo-local-secret
+      JWT_EXPIRATION: 24h
+      CORS_ORIGIN: http://localhost:8080
+      LOG_LEVEL: info
+      API_PREFIX: api
+      API_VERSION: v1
+      EMAIL_FROM: noreply@corporatelearning.local
+      EMAIL_ADMIN: admin@corporatelearning.local
+    command: sh -c "npm run seed && npm run start:prod"
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then((res) => { if (!res.ok) process.exit(1); }).catch(() => process.exit(1));"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:3000
+    container_name: cls-frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+
+volumes:
+  cls_postgres_data:
